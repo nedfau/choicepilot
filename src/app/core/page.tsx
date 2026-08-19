@@ -1,9 +1,48 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { supabase } from "@/lib/supabaseClient";
 
 type SaveStatus = "idle" | "saving" | "saved" | "error" | "not-configured";
+
+interface RecentEntry {
+  id: string;
+  input_text: string;
+  created_at: string;
+}
+
+const TITLE_WORD_COUNT = 6;
+const RELATIVE_TIME_UNITS: Array<{
+  amount: number;
+  unit: Intl.RelativeTimeFormatUnit;
+}> = [
+  { amount: 60, unit: "seconds" },
+  { amount: 60, unit: "minutes" },
+  { amount: 24, unit: "hours" },
+  { amount: 7, unit: "days" },
+  { amount: 4.34524, unit: "weeks" },
+  { amount: 12, unit: "months" },
+  { amount: Infinity, unit: "years" },
+];
+
+function titleFromText(text: string): string {
+  const words = text.trim().split(/\s+/);
+  if (words.length <= TITLE_WORD_COUNT) return words.join(" ");
+  return words.slice(0, TITLE_WORD_COUNT).join(" ") + "…";
+}
+
+function relativeTime(isoDate: string): string {
+  const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+  let duration = (new Date(isoDate).getTime() - Date.now()) / 1000;
+
+  for (const { amount, unit } of RELATIVE_TIME_UNITS) {
+    if (Math.abs(duration) < amount) {
+      return rtf.format(Math.round(duration), unit);
+    }
+    duration /= amount;
+  }
+  return rtf.format(Math.round(duration), "years");
+}
 
 export default function Core() {
   const [inputText, setInputText] = useState("");
@@ -14,6 +53,44 @@ export default function Core() {
     priorities: string[];
   } | null>(null);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
+  const [recentEntries, setRecentEntries] = useState<RecentEntry[] | null>(
+    null
+  );
+  const [recentUnavailable, setRecentUnavailable] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function loadRecentEntries() {
+      if (!supabase) {
+        if (!ignore) {
+          setRecentEntries([]);
+          setRecentUnavailable(true);
+        }
+        return;
+      }
+      const { data, error } = await supabase
+        .from("core_outputs")
+        .select("id, input_text, created_at")
+        .order("created_at", { ascending: false })
+        .limit(5);
+
+      if (ignore) return;
+      if (error || !data) {
+        setRecentEntries([]);
+        setRecentUnavailable(true);
+        return;
+      }
+      setRecentEntries(data);
+      setRecentUnavailable(false);
+    }
+
+    loadRecentEntries();
+    return () => {
+      ignore = true;
+    };
+  }, [refreshKey]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -56,6 +133,7 @@ export default function Core() {
       priorities: result.priorities,
     });
     setSaveStatus(error ? "error" : "saved");
+    if (!error) setRefreshKey((key) => key + 1);
   }
 
   return (
@@ -173,6 +251,39 @@ export default function Core() {
           </div>
         </div>
       )}
+
+      <section className="mt-16 border-t border-zinc-100 pt-10">
+        <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
+          Recent decisions
+        </h2>
+        {recentEntries === null ? (
+          <p className="mt-4 text-sm text-zinc-500">Loading…</p>
+        ) : recentUnavailable ? (
+          <p className="mt-4 text-sm text-zinc-500">
+            Recent entries aren&apos;t available yet.
+          </p>
+        ) : recentEntries.length === 0 ? (
+          <p className="mt-4 text-sm text-zinc-500">
+            No saved decisions yet.
+          </p>
+        ) : (
+          <ul className="mt-4 space-y-3">
+            {recentEntries.map((entry) => (
+              <li
+                key={entry.id}
+                className="flex items-center justify-between rounded-lg border border-zinc-100 px-4 py-3"
+              >
+                <span className="text-sm text-zinc-800">
+                  {titleFromText(entry.input_text)}
+                </span>
+                <span className="text-xs text-zinc-400">
+                  {relativeTime(entry.created_at)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
 }
