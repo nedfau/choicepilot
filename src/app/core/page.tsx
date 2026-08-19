@@ -76,9 +76,55 @@ export default function Core() {
       </form>
 
       {result && (
-        <pre className="mt-10 whitespace-pre-wrap rounded-lg border border-zinc-200 bg-zinc-50 p-4 text-sm text-zinc-700">
-          {JSON.stringify(result, null, 2)}
-        </pre>
+        <div className="mt-10 rounded-xl border border-zinc-200 p-6">
+          <span className="inline-flex items-center rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-amber-700">
+            Simulated — rule-based, not AI
+          </span>
+          <div className="mt-6 grid gap-8 sm:grid-cols-2">
+            <div>
+              <h2 className="text-sm font-semibold text-zinc-900">
+                Options detected
+              </h2>
+              {result.options.length > 0 ? (
+                <ul className="mt-3 space-y-2">
+                  {result.options.map((option) => (
+                    <li
+                      key={option}
+                      className="rounded-lg bg-zinc-50 px-3 py-2 text-sm text-zinc-700"
+                    >
+                      {option}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-3 text-sm text-zinc-500">
+                  No options detected.
+                </p>
+              )}
+            </div>
+            <div>
+              <h2 className="text-sm font-semibold text-zinc-900">
+                Priorities detected
+              </h2>
+              {result.priorities.length > 0 ? (
+                <ul className="mt-3 space-y-2">
+                  {result.priorities.map((priority) => (
+                    <li
+                      key={priority}
+                      className="rounded-lg bg-indigo-50 px-3 py-2 text-sm text-indigo-700"
+                    >
+                      {priority}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-3 text-sm text-zinc-500">
+                  No priorities detected.
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
