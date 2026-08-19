@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { supabase } from "@/lib/supabaseClient";
+
+type SaveStatus = "idle" | "saving" | "saved" | "error" | "not-configured";
 
 export default function Core() {
   const [inputText, setInputText] = useState("");
@@ -10,6 +13,7 @@ export default function Core() {
     options: string[];
     priorities: string[];
   } | null>(null);
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -22,6 +26,7 @@ export default function Core() {
     }
 
     setValidationError(null);
+    setSaveStatus("idle");
     setIsExtracting(true);
     try {
       const response = await fetch("/api/core/extract", {
@@ -34,6 +39,23 @@ export default function Core() {
     } finally {
       setIsExtracting(false);
     }
+  }
+
+  async function handleSave() {
+    if (!result) return;
+
+    if (!supabase) {
+      setSaveStatus("not-configured");
+      return;
+    }
+
+    setSaveStatus("saving");
+    const { error } = await supabase.from("core_outputs").insert({
+      input_text: inputText.trim(),
+      options: result.options,
+      priorities: result.priorities,
+    });
+    setSaveStatus(error ? "error" : "saved");
   }
 
   return (
@@ -123,6 +145,31 @@ export default function Core() {
                 </p>
               )}
             </div>
+          </div>
+
+          <div className="mt-6 flex items-center gap-4">
+            <button
+              type="button"
+              onClick={handleSave}
+              disabled={saveStatus === "saving"}
+              className="inline-flex items-center justify-center rounded-full border border-zinc-200 px-5 py-2.5 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-50 disabled:opacity-60"
+            >
+              {saveStatus === "saving" ? "Saving…" : "Save"}
+            </button>
+            {saveStatus === "saved" && (
+              <p className="text-sm text-emerald-600">Saved.</p>
+            )}
+            {saveStatus === "error" && (
+              <p className="text-sm text-red-600">
+                Couldn&apos;t save — please try again.
+              </p>
+            )}
+            {saveStatus === "not-configured" && (
+              <p className="text-sm text-zinc-500">
+                Supabase isn&apos;t configured yet — set NEXT_PUBLIC_SUPABASE_URL
+                and NEXT_PUBLIC_SUPABASE_ANON_KEY to enable saving.
+              </p>
+            )}
           </div>
         </div>
       )}
