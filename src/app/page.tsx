@@ -1,3 +1,26 @@
+const roadmap = [
+  {
+    label: "Week 0",
+    title: "Infrastructure",
+    status: "current" as const,
+  },
+  {
+    label: "Future",
+    title: "Comparison Tool",
+    status: "upcoming" as const,
+  },
+  {
+    label: "Future",
+    title: "AI Recommendations",
+    status: "upcoming" as const,
+  },
+  {
+    label: "Future",
+    title: "Saved Results",
+    status: "upcoming" as const,
+  },
+];
+
 const steps = [
   {
     number: "1",
@@ -56,6 +79,39 @@ export default function Home() {
                 </h3>
                 <p className="text-sm leading-6 text-zinc-600">
                   {step.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div className="mx-auto max-w-5xl px-6 py-20">
+          <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">
+            Roadmap
+          </h2>
+          <div className="mt-12 grid gap-6 sm:grid-cols-4">
+            {roadmap.map((item) => (
+              <div
+                key={item.title}
+                className={`rounded-xl border px-5 py-6 ${
+                  item.status === "current"
+                    ? "border-indigo-200 bg-indigo-50"
+                    : "border-zinc-100 bg-white"
+                }`}
+              >
+                <p
+                  className={`text-xs font-semibold uppercase tracking-wide ${
+                    item.status === "current"
+                      ? "text-indigo-600"
+                      : "text-zinc-400"
+                  }`}
+                >
+                  {item.label}
+                </p>
+                <p className="mt-2 text-sm font-medium text-zinc-900">
+                  {item.title}
                 </p>
               </div>
             ))}
