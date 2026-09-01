@@ -1,11 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import IntakeForm from "@/components/research/IntakeForm";
+import ResearchTable from "@/components/research/ResearchTable";
+import { supabase } from "@/lib/supabaseClient";
 import type { ResearchEntry } from "@/lib/researchEntry";
 
 export default function Research() {
   const [entries, setEntries] = useState<ResearchEntry[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function loadEntries() {
+      if (!supabase) {
+        if (!ignore) setIsLoading(false);
+        return;
+      }
+      const { data } = await supabase
+        .from("research_entries")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (!ignore) {
+        setEntries(data ?? []);
+        setIsLoading(false);
+      }
+    }
+
+    loadEntries();
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   function handleEntryAdded(entry: ResearchEntry) {
     setEntries((prev) => [entry, ...prev]);
@@ -24,10 +52,18 @@ export default function Research() {
 
       <div className="mt-10">
         <IntakeForm onEntryAdded={handleEntryAdded} />
-        {entries.length > 0 && (
-          <p className="mt-4 text-sm text-zinc-500">
-            {entries.length} added this session.
-          </p>
+      </div>
+
+      <div className="mt-12">
+        <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
+          Entries
+        </h2>
+        {isLoading ? (
+          <p className="mt-4 text-sm text-zinc-500">Loading…</p>
+        ) : (
+          <div className="mt-4">
+            <ResearchTable entries={entries} />
+          </div>
         )}
       </div>
     </div>
