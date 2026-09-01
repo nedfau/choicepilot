@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import IntakeForm from "@/components/research/IntakeForm";
 import ResearchTable from "@/components/research/ResearchTable";
+import RiskMap from "@/components/research/RiskMap";
 import { supabase } from "@/lib/supabaseClient";
 import type { ResearchEntry } from "@/lib/researchEntry";
 
@@ -65,6 +66,15 @@ export default function Research() {
             <ResearchTable entries={entries} />
           </div>
         )}
+      </div>
+
+      <div className="mt-16 border-t border-zinc-100 pt-10">
+        <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
+          Risk map
+        </h2>
+        <div className="mt-4">
+          <RiskMap />
+        </div>
       </div>
     </div>
   );
