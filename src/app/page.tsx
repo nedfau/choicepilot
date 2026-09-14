@@ -1,12 +1,35 @@
+import Link from "next/link";
+
+const exploreLinks = [
+  { href: "/research", label: "Research" },
+  { href: "/product", label: "Product" },
+  { href: "/pricing", label: "Pricing" },
+];
+
 const roadmap = [
   {
     label: "Week 0",
     title: "Infrastructure",
-    status: "current" as const,
+    status: "shipped" as const,
+  },
+  {
+    label: "Week 1",
+    title: "Core Extraction",
+    status: "shipped" as const,
+  },
+  {
+    label: "Week 2",
+    title: "Research & Benchmarking",
+    status: "shipped" as const,
+  },
+  {
+    label: "Week 3",
+    title: "Product + Pricing Simulator",
+    status: "shipped" as const,
   },
   {
     label: "Future",
-    title: "Comparison Tool",
+    title: "Comparison & Scoring Engine",
     status: "upcoming" as const,
   },
   {
@@ -60,6 +83,22 @@ export default function Home() {
           >
             Start Comparing
           </a>
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-zinc-500">
+            <span>See what&apos;s built so far:</span>
+            {exploreLinks.map((link, i) => (
+              <span key={link.href} className="flex items-center gap-2">
+                <Link
+                  href={link.href}
+                  className="font-medium text-indigo-600 hover:text-indigo-500"
+                >
+                  {link.label}
+                </Link>
+                {i < exploreLinks.length - 1 && (
+                  <span className="text-zinc-300">·</span>
+                )}
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -96,15 +135,15 @@ export default function Home() {
               <div
                 key={item.title}
                 className={`rounded-xl border px-5 py-6 ${
-                  item.status === "current"
-                    ? "border-indigo-200 bg-indigo-50"
+                  item.status === "shipped"
+                    ? "border-emerald-200 bg-emerald-50"
                     : "border-zinc-100 bg-white"
                 }`}
               >
                 <p
                   className={`text-xs font-semibold uppercase tracking-wide ${
-                    item.status === "current"
-                      ? "text-indigo-600"
+                    item.status === "shipped"
+                      ? "text-emerald-600"
                       : "text-zinc-400"
                   }`}
                 >
