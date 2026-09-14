@@ -1,15 +1,18 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import AssumptionsForm, {
   type AssumptionsFields,
 } from "@/components/pricing/AssumptionsForm";
 import RevenueOutput from "@/components/pricing/RevenueOutput";
+import SavedScenarios from "@/components/pricing/SavedScenarios";
+import { supabase } from "@/lib/supabaseClient";
 import {
   DEFAULT_ASSUMPTIONS,
   computeRevenue,
   sanitizeAssumption,
   type BillingPeriod,
+  type PricingScenario,
 } from "@/lib/pricingScenario";
 
 type SaveStatus = "idle" | "saving" | "saved" | "error";
@@ -41,6 +44,35 @@ export default function Pricing() {
 
   const revenue = useMemo(() => computeRevenue(assumptions), [assumptions]);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
+  const [scenarios, setScenarios] = useState<PricingScenario[]>([]);
+  const [isLoadingScenarios, setIsLoadingScenarios] = useState(true);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function loadScenarios() {
+      if (!supabase) {
+        if (!ignore) setIsLoadingScenarios(false);
+        return;
+      }
+      const { data } = await supabase
+        .from("pricing_scenarios")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(5);
+
+      if (!ignore) {
+        setScenarios(data ?? []);
+        setIsLoadingScenarios(false);
+      }
+    }
+
+    loadScenarios();
+    return () => {
+      ignore = true;
+    };
+  }, [refreshKey]);
 
   async function handleSave() {
     setSaveStatus("saving");
@@ -58,7 +90,12 @@ export default function Pricing() {
           annual_revenue: revenue.annual,
         }),
       });
-      setSaveStatus(response.ok ? "saved" : "error");
+      if (response.ok) {
+        setSaveStatus("saved");
+        setRefreshKey((key) => key + 1);
+      } else {
+        setSaveStatus("error");
+      }
     } catch {
       setSaveStatus("error");
     }
@@ -102,6 +139,13 @@ export default function Pricing() {
             Couldn&apos;t save — please try again.
           </p>
         )}
+      </div>
+
+      <div className="mt-12">
+        <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
+          Saved scenarios
+        </h2>
+        <SavedScenarios scenarios={scenarios} isLoading={isLoadingScenarios} />
       </div>
     </div>
   );
