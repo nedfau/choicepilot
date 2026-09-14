@@ -21,6 +21,12 @@ export interface RevenueResult {
   annual: number;
 }
 
+export function sanitizeAssumption(raw: string): number {
+  const value = Number(raw);
+  if (raw.trim() === "" || Number.isNaN(value) || value < 0) return 0;
+  return value;
+}
+
 export function computeRevenue(assumptions: PricingAssumptions): RevenueResult {
   const monthly =
     assumptions.plusSubscribers * assumptions.plusPrice +
