@@ -67,7 +67,11 @@ export default function Research() {
         international students.
       </p>
 
-      <div className="mt-10">
+      <div className="mt-12">
+        <IntakeForm onEntryAdded={handleEntryAdded} />
+      </div>
+
+      <div className="mt-12">
         {isLoading ? (
           <p className="text-sm text-zinc-500">Loading…</p>
         ) : (
@@ -76,31 +80,9 @@ export default function Research() {
       </div>
 
       <div className="mt-12">
-        <IntakeForm onEntryAdded={handleEntryAdded} />
-      </div>
-
-      <div className="mt-12">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
-            Entries
-          </h2>
-          <div className="inline-flex rounded-full border border-zinc-200 p-1 text-sm">
-            {(["table", "cards"] as const).map((option) => (
-              <button
-                key={option}
-                type="button"
-                onClick={() => setView(option)}
-                className={`rounded-full px-4 py-1.5 font-medium capitalize transition-colors ${
-                  view === option
-                    ? "bg-indigo-600 text-white"
-                    : "text-zinc-600 hover:text-zinc-900"
-                }`}
-              >
-                {option}
-              </button>
-            ))}
-          </div>
-        </div>
+        <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
+          Entries
+        </h2>
 
         <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
           <select
@@ -122,6 +104,22 @@ export default function Research() {
             placeholder="Search name or description…"
             className="flex-1 rounded-lg border border-zinc-200 px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-indigo-500 focus:outline-none"
           />
+          <div className="inline-flex rounded-full border border-zinc-200 p-1 text-sm">
+            {(["table", "cards"] as const).map((option) => (
+              <button
+                key={option}
+                type="button"
+                onClick={() => setView(option)}
+                className={`rounded-full px-4 py-1.5 font-medium capitalize transition-colors ${
+                  view === option
+                    ? "bg-indigo-600 text-white"
+                    : "text-zinc-600 hover:text-zinc-900"
+                }`}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
         </div>
 
         {isLoading ? (
