@@ -5,8 +5,8 @@ export default function DashboardSummary({
 }: {
   entries: ResearchEntry[];
 }) {
-  const withGapNote = entries.filter(
-    (entry) => entry.gap_note && entry.gap_note.trim().length > 0
+  const mexicoCount = entries.filter(
+    (entry) => entry.region?.toLowerCase() === "mexico"
   ).length;
 
   return (
@@ -38,10 +38,10 @@ export default function DashboardSummary({
 
       <div className="rounded-xl border border-zinc-200 p-6">
         <p className="text-xs font-semibold uppercase tracking-wide text-zinc-400">
-          With a Gap/Note
+          Region = Mexico
         </p>
         <p className="mt-2 text-3xl font-semibold tracking-tight text-zinc-900">
-          {withGapNote}
+          {mexicoCount}
         </p>
       </div>
     </div>
