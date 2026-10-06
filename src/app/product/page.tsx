@@ -10,6 +10,28 @@ interface Tier {
   audience: string;
 }
 
+interface Segment {
+  name: string;
+  needs: string;
+  tiers: string[];
+  pricingModel: string;
+}
+
+const SEGMENTS: Segment[] = [
+  {
+    name: "Students (international students)",
+    needs: "A single place to compare housing, insurance, and banking options without sponsored bias before committing to a lease, policy, or account.",
+    tiers: ["Free", "Plus"],
+    pricingModel: "$0 (Free) or $6.99 per month per student (Plus)",
+  },
+  {
+    name: "Universities (international-student offices)",
+    needs: "A vetted, branded starting point to hand incoming international students, and fewer repetitive housing/insurance/banking questions landing on the international office.",
+    tiers: ["Campus"],
+    pricingModel: "$199 per month per partner",
+  },
+];
+
 const TIERS: Tier[] = [
   { name: "Free", price: "$0", audience: "Any international student" },
   {
@@ -108,7 +130,51 @@ export default function Product() {
         nothing here is gated or billed yet.
       </p>
 
-      <div className="mt-10 overflow-x-auto rounded-xl border border-zinc-200">
+      <div className="mt-16">
+        <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
+          Customer segments
+        </h2>
+        <div className="mt-6 grid gap-6 sm:grid-cols-2">
+          {SEGMENTS.map((segment) => (
+            <div
+              key={segment.name}
+              className="rounded-xl border border-zinc-200 p-6"
+            >
+              <h3 className="text-base font-semibold text-zinc-900">
+                {segment.name}
+              </h3>
+              <p className="mt-3 text-sm leading-6 text-zinc-600">
+                {segment.needs}
+              </p>
+              <div className="mt-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-zinc-400">
+                  {segment.tiers.length > 1 ? "Tiers used" : "Tier used"}
+                </p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {segment.tiers.map((tier) => (
+                    <span
+                      key={tier}
+                      className="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700"
+                    >
+                      {tier}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="mt-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-zinc-400">
+                  Pricing model
+                </p>
+                <p className="mt-1 text-sm font-medium text-zinc-900">
+                  {segment.pricingModel}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-16 overflow-x-auto rounded-xl border border-zinc-200">
         <table className="w-full min-w-[720px] text-left text-sm">
           <thead className="border-b border-zinc-200 bg-zinc-50">
             <tr>
