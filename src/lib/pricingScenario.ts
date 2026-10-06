@@ -21,6 +21,48 @@ export interface RevenueResult {
   annual: number;
 }
 
+export const SCENARIO_PRESETS = {
+  conservative: {
+    plusSubscribers: 100,
+    plusPrice: 6.99,
+    campusPartners: 1,
+    campusPrice: 199,
+  },
+  base: DEFAULT_ASSUMPTIONS,
+  optimistic: {
+    plusSubscribers: 2000,
+    plusPrice: 6.99,
+    campusPartners: 15,
+    campusPrice: 199,
+  },
+} as const satisfies Record<string, PricingAssumptions>;
+
+export type ScenarioPreset = keyof typeof SCENARIO_PRESETS | "custom";
+
+export interface SegmentRevenue {
+  students: RevenueResult;
+  universities: RevenueResult;
+}
+
+export function computeSegmentRevenue(
+  assumptions: PricingAssumptions
+): SegmentRevenue {
+  const studentsMonthly = assumptions.plusSubscribers * assumptions.plusPrice;
+  const universitiesMonthly =
+    assumptions.campusPartners * assumptions.campusPrice;
+
+  return {
+    students: {
+      monthly: studentsMonthly,
+      annual: studentsMonthly * 12 * (1 - ANNUAL_DISCOUNT),
+    },
+    universities: {
+      monthly: universitiesMonthly,
+      annual: universitiesMonthly * 12 * (1 - ANNUAL_DISCOUNT),
+    },
+  };
+}
+
 export function sanitizeAssumption(raw: string): number {
   const value = Number(raw);
   if (raw.trim() === "" || Number.isNaN(value) || value < 0) return 0;

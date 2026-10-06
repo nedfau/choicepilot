@@ -5,14 +5,18 @@ import AssumptionsForm, {
   type AssumptionsFields,
 } from "@/components/pricing/AssumptionsForm";
 import RevenueOutput from "@/components/pricing/RevenueOutput";
+import ScenarioToggle from "@/components/pricing/ScenarioToggle";
 import SavedScenarios from "@/components/pricing/SavedScenarios";
 import { supabase } from "@/lib/supabaseClient";
 import {
   DEFAULT_ASSUMPTIONS,
+  SCENARIO_PRESETS,
   computeRevenue,
+  computeSegmentRevenue,
   sanitizeAssumption,
   type BillingPeriod,
   type PricingScenario,
+  type ScenarioPreset,
 } from "@/lib/pricingScenario";
 
 type SaveStatus = "idle" | "saving" | "saved" | "error";
@@ -27,9 +31,22 @@ const INITIAL_FIELDS: AssumptionsFields = {
 export default function Pricing() {
   const [fields, setFields] = useState<AssumptionsFields>(INITIAL_FIELDS);
   const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>("monthly");
+  const [scenarioPreset, setScenarioPreset] = useState<ScenarioPreset>("base");
 
   function handleChange(field: keyof AssumptionsFields, value: string) {
     setFields((prev) => ({ ...prev, [field]: value }));
+    setScenarioPreset("custom");
+  }
+
+  function handlePresetSelect(preset: keyof typeof SCENARIO_PRESETS) {
+    const values = SCENARIO_PRESETS[preset];
+    setFields({
+      plusSubscribers: String(values.plusSubscribers),
+      plusPrice: String(values.plusPrice),
+      campusPartners: String(values.campusPartners),
+      campusPrice: String(values.campusPrice),
+    });
+    setScenarioPreset(preset);
   }
 
   const assumptions = useMemo(
@@ -43,6 +60,10 @@ export default function Pricing() {
   );
 
   const revenue = useMemo(() => computeRevenue(assumptions), [assumptions]);
+  const segmentRevenue = useMemo(
+    () => computeSegmentRevenue(assumptions),
+    [assumptions]
+  );
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
   const [scenarios, setScenarios] = useState<PricingScenario[]>([]);
   const [isLoadingScenarios, setIsLoadingScenarios] = useState(true);
@@ -111,10 +132,15 @@ export default function Pricing() {
         look like. Hypothetical only — no payments happen here.
       </p>
 
-      <div className="mt-10 grid gap-6 lg:grid-cols-2">
+      <div className="mt-8">
+        <ScenarioToggle preset={scenarioPreset} onSelect={handlePresetSelect} />
+      </div>
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <AssumptionsForm values={fields} onChange={handleChange} />
         <RevenueOutput
           revenue={revenue}
+          segmentRevenue={segmentRevenue}
           billingPeriod={billingPeriod}
           onBillingPeriodChange={setBillingPeriod}
         />
