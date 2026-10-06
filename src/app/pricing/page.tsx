@@ -112,9 +112,7 @@ export default function Pricing() {
       </p>
 
       <div className="mt-10 grid gap-6 lg:grid-cols-2">
-        <div className="rounded-xl border border-zinc-200 p-6">
-          <AssumptionsForm values={fields} onChange={handleChange} />
-        </div>
+        <AssumptionsForm values={fields} onChange={handleChange} />
         <RevenueOutput
           revenue={revenue}
           billingPeriod={billingPeriod}
