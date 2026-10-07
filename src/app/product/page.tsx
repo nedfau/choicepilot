@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
+import { ANNUAL_DISCOUNT, DEFAULT_ASSUMPTIONS } from "@/lib/pricingScenario";
 
 export const metadata: Metadata = {
   title: "Product — ChoicePilot",
 };
+
+const plusAnnualPrice = (
+  DEFAULT_ASSUMPTIONS.plusPrice *
+  12 *
+  (1 - ANNUAL_DISCOUNT)
+).toFixed(2);
 
 interface Tier {
   name: string;
@@ -189,6 +196,11 @@ export default function Product() {
                   <div className="mt-1 text-sm font-medium text-indigo-600">
                     {tier.price}
                   </div>
+                  {tier.name === "Plus" && (
+                    <div className="mt-1 text-xs font-normal text-zinc-500">
+                      or ${plusAnnualPrice}/year (save {ANNUAL_DISCOUNT * 100}%)
+                    </div>
+                  )}
                   <div className="mt-1 text-xs font-normal text-zinc-500">
                     {tier.audience}
                   </div>

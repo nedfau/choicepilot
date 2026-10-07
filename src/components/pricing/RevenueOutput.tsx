@@ -1,9 +1,10 @@
 "use client";
 
-import type {
-  BillingPeriod,
-  RevenueResult,
-  SegmentRevenue,
+import {
+  ANNUAL_DISCOUNT,
+  type BillingPeriod,
+  type RevenueResult,
+  type SegmentRevenue,
 } from "@/lib/pricingScenario";
 
 const currency = new Intl.NumberFormat("en-US", {
@@ -23,7 +24,10 @@ export default function RevenueOutput({
   billingPeriod: BillingPeriod;
   onBillingPeriodChange: (period: BillingPeriod) => void;
 }) {
-  const figure = billingPeriod === "monthly" ? revenue.monthly : revenue.annual;
+  const isAnnual = billingPeriod === "annual";
+  const figure = isAnnual ? revenue.annual : revenue.monthly;
+  const undiscountedAnnual = revenue.monthly * 12;
+  const annualSavings = undiscountedAnnual - revenue.annual;
   const studentsFigure =
     billingPeriod === "monthly"
       ? segmentRevenue.students.monthly
@@ -55,9 +59,26 @@ export default function RevenueOutput({
       <p className="mt-6 text-sm font-medium text-zinc-500">
         {billingPeriod === "monthly" ? "Monthly revenue" : "Annual revenue"}
       </p>
-      <p className="mt-1 text-4xl font-semibold tracking-tight text-zinc-900">
-        {currency.format(figure)}
-      </p>
+      <div className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <p className="text-4xl font-semibold tracking-tight text-zinc-900">
+          {currency.format(figure)}
+        </p>
+        {isAnnual && (
+          <p className="text-lg text-zinc-400 line-through">
+            {currency.format(undiscountedAnnual)}
+          </p>
+        )}
+      </div>
+      {isAnnual && (
+        <span className="mt-2 inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700">
+          {ANNUAL_DISCOUNT * 100}% annual discount
+        </span>
+      )}
+      {isAnnual && (
+        <p className="mt-2 text-sm text-zinc-500">
+          Saves {currency.format(annualSavings)} vs. paying monthly
+        </p>
+      )}
 
       <div className="mt-6 space-y-2 border-t border-zinc-100 pt-4">
         <p className="text-xs font-semibold uppercase tracking-wide text-zinc-400">
