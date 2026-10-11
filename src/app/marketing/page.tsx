@@ -10,6 +10,7 @@ import {
 } from "@/lib/marketing-content";
 import SocialPostCard from "@/components/marketing/SocialPostCard";
 import VideoScriptCard from "@/components/marketing/VideoScriptCard";
+import CampaignCalendar from "@/components/marketing/CampaignCalendar";
 
 export default function Marketing() {
   return (
@@ -268,6 +269,16 @@ export default function Marketing() {
           {videoScripts.map((script) => (
             <VideoScriptCard key={script.id} script={script} />
           ))}
+        </div>
+      </section>
+
+      {/* Campaign calendar */}
+      <section className="mt-16">
+        <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
+          Campaign calendar
+        </h2>
+        <div className="mt-6">
+          <CampaignCalendar />
         </div>
       </section>
     </div>
