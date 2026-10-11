@@ -23,6 +23,11 @@ const roadmap = [
     status: "shipped" as const,
   },
   {
+    label: "Week 4",
+    title: "Marketing Engine + Content System",
+    status: "shipped" as const,
+  },
+  {
     label: "Future",
     title: "Comparison & Scoring Engine",
     status: "upcoming" as const,
