@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   TEMPLATE_CONTENT_LABEL,
   abTests,
@@ -9,12 +10,22 @@ import {
   socialPosts,
   videoScripts,
 } from "@/lib/marketing-content";
+import {
+  formatBrand,
+  formatPersona,
+  formatLandingCopy,
+} from "@/lib/marketing-format";
 import SocialPostCard from "@/components/marketing/SocialPostCard";
 import VideoScriptCard from "@/components/marketing/VideoScriptCard";
 import CampaignCalendar from "@/components/marketing/CampaignCalendar";
 import AbTestCard from "@/components/marketing/AbTestCard";
+import SaveButton from "@/components/marketing/SaveButton";
+import SavedAssetsList from "@/components/marketing/SavedAssetsList";
 
 export default function Marketing() {
+  const [refreshKey, setRefreshKey] = useState(0);
+  const handleSaved = () => setRefreshKey((key) => key + 1);
+
   return (
     <div className="mx-auto max-w-5xl px-6 py-16">
       <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">
@@ -30,9 +41,17 @@ export default function Marketing() {
 
       {/* Brand system */}
       <section id="marketing-brand-card" className="mt-16">
-        <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
-          Brand system
-        </h2>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
+            Brand system
+          </h2>
+          <SaveButton
+            assetType="brand"
+            title={`Brand: ${brand.name}`}
+            content={formatBrand(brand)}
+            onSaved={handleSaved}
+          />
+        </div>
         <div className="mt-6 rounded-xl border border-zinc-200 p-6">
           <p className="text-base font-semibold text-zinc-900">
             {brand.name}
@@ -110,9 +129,17 @@ export default function Marketing() {
 
       {/* Persona */}
       <section id="marketing-persona-card" className="mt-16">
-        <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
-          Persona
-        </h2>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
+            Persona
+          </h2>
+          <SaveButton
+            assetType="persona"
+            title={`Persona: ${persona.name}`}
+            content={formatPersona(persona)}
+            onSaved={handleSaved}
+          />
+        </div>
         <div className="mt-6 rounded-xl border border-zinc-200 p-6">
           <div className="flex flex-wrap items-center gap-3">
             <p className="text-base font-semibold text-zinc-900">
@@ -165,9 +192,17 @@ export default function Marketing() {
 
       {/* Landing copy */}
       <section id="marketing-landing-copy-card" className="mt-16">
-        <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
-          Landing copy
-        </h2>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
+            Landing copy
+          </h2>
+          <SaveButton
+            assetType="landing_copy"
+            title="Landing copy"
+            content={formatLandingCopy(landingCopy)}
+            onSaved={handleSaved}
+          />
+        </div>
         <div className="mt-6 rounded-xl border border-zinc-200 p-6">
           <p className="text-xs font-semibold uppercase tracking-wide text-zinc-400">
             Hero
@@ -257,7 +292,7 @@ export default function Marketing() {
         </h2>
         <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {socialPosts.map((post) => (
-            <SocialPostCard key={post.id} post={post} />
+            <SocialPostCard key={post.id} post={post} onSaved={handleSaved} />
           ))}
         </div>
       </section>
@@ -269,7 +304,11 @@ export default function Marketing() {
         </h2>
         <div className="mt-6 grid gap-6 lg:grid-cols-3">
           {videoScripts.map((script) => (
-            <VideoScriptCard key={script.id} script={script} />
+            <VideoScriptCard
+              key={script.id}
+              script={script}
+              onSaved={handleSaved}
+            />
           ))}
         </div>
       </section>
@@ -280,7 +319,7 @@ export default function Marketing() {
           Campaign calendar
         </h2>
         <div className="mt-6">
-          <CampaignCalendar />
+          <CampaignCalendar onSaved={handleSaved} />
         </div>
       </section>
 
@@ -293,6 +332,16 @@ export default function Marketing() {
           {abTests.map((test) => (
             <AbTestCard key={test.testName} test={test} />
           ))}
+        </div>
+      </section>
+
+      {/* Saved assets */}
+      <section className="mt-16 border-t border-zinc-100 pt-10">
+        <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
+          Saved assets
+        </h2>
+        <div className="mt-6">
+          <SavedAssetsList refreshKey={refreshKey} />
         </div>
       </section>
     </div>

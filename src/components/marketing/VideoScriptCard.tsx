@@ -1,8 +1,15 @@
 import type { VideoScript } from "@/lib/marketing-content";
 import { formatVideoScript } from "@/lib/marketing-format";
 import CopyButton from "./CopyButton";
+import SaveButton from "./SaveButton";
 
-export default function VideoScriptCard({ script }: { script: VideoScript }) {
+export default function VideoScriptCard({
+  script,
+  onSaved,
+}: {
+  script: VideoScript;
+  onSaved?: () => void;
+}) {
   return (
     <div id={script.id} className="rounded-xl border border-zinc-200 p-6">
       <div className="flex items-start justify-between gap-3">
@@ -12,7 +19,15 @@ export default function VideoScriptCard({ script }: { script: VideoScript }) {
           </p>
           <p className="text-xs text-zinc-400">{script.duration}</p>
         </div>
-        <CopyButton text={formatVideoScript(script)} />
+        <div className="flex items-center gap-2">
+          <CopyButton text={formatVideoScript(script)} />
+          <SaveButton
+            assetType="video_script"
+            title={script.title}
+            content={formatVideoScript(script)}
+            onSaved={onSaved}
+          />
+        </div>
       </div>
       <p className="mt-3 text-sm font-medium text-zinc-700">
         Hook: {script.hook}

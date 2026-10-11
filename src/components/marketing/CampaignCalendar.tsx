@@ -16,8 +16,13 @@ import {
 } from "@/lib/marketing-format";
 import { downloadTextFile } from "@/lib/download";
 import CopyButton from "./CopyButton";
+import SaveButton from "./SaveButton";
 
-export default function CampaignCalendar() {
+export default function CampaignCalendar({
+  onSaved,
+}: {
+  onSaved?: () => void;
+}) {
   function handleExportCsv() {
     downloadTextFile(
       "choicepilot-campaign-calendar.csv",
@@ -50,6 +55,12 @@ export default function CampaignCalendar() {
         </p>
         <div className="flex flex-wrap items-center gap-2">
           <CopyButton text={calendarToText(calendar)} />
+          <SaveButton
+            assetType="calendar"
+            title="14-day campaign calendar"
+            content={calendarToText(calendar)}
+            onSaved={onSaved}
+          />
           <button
             type="button"
             onClick={handleExportCsv}
