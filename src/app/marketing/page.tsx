@@ -5,7 +5,11 @@ import {
   brand,
   persona,
   landingCopy,
+  socialPosts,
+  videoScripts,
 } from "@/lib/marketing-content";
+import SocialPostCard from "@/components/marketing/SocialPostCard";
+import VideoScriptCard from "@/components/marketing/VideoScriptCard";
 
 export default function Marketing() {
   return (
@@ -240,6 +244,30 @@ export default function Marketing() {
               {landingCopy.finalCta.body}
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* Social posts */}
+      <section className="mt-16">
+        <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
+          Social posts
+        </h2>
+        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {socialPosts.map((post) => (
+            <SocialPostCard key={post.id} post={post} />
+          ))}
+        </div>
+      </section>
+
+      {/* Video scripts */}
+      <section className="mt-16">
+        <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
+          Video scripts
+        </h2>
+        <div className="mt-6 grid gap-6 lg:grid-cols-3">
+          {videoScripts.map((script) => (
+            <VideoScriptCard key={script.id} script={script} />
+          ))}
         </div>
       </section>
     </div>
