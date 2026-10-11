@@ -2,6 +2,7 @@
 
 import {
   TEMPLATE_CONTENT_LABEL,
+  abTests,
   brand,
   persona,
   landingCopy,
@@ -11,6 +12,7 @@ import {
 import SocialPostCard from "@/components/marketing/SocialPostCard";
 import VideoScriptCard from "@/components/marketing/VideoScriptCard";
 import CampaignCalendar from "@/components/marketing/CampaignCalendar";
+import AbTestCard from "@/components/marketing/AbTestCard";
 
 export default function Marketing() {
   return (
@@ -279,6 +281,18 @@ export default function Marketing() {
         </h2>
         <div className="mt-6">
           <CampaignCalendar />
+        </div>
+      </section>
+
+      {/* A/B tests */}
+      <section className="mt-16">
+        <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
+          A/B tests
+        </h2>
+        <div className="mt-6 grid gap-6 sm:grid-cols-2">
+          {abTests.map((test) => (
+            <AbTestCard key={test.testName} test={test} />
+          ))}
         </div>
       </section>
     </div>
