@@ -32,7 +32,15 @@ type Message =
       summary: string[];
       steps: string[];
       links: ResponseLink[];
-    };
+    }
+  | {
+      id: string;
+      role: "assistant";
+      kind: "checkpoint";
+      text: string;
+      status: "pending" | "confirmed" | "declined";
+    }
+  | { id: string; role: "assistant"; kind: "error"; text: string };
 
 function firstQuestionMessage(id: string): Message {
   const question = INTAKE_QUESTIONS[0];
@@ -61,11 +69,87 @@ export default function Chat() {
   const [inputValue, setInputValue] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const firstGuardrailCategoryRef = useRef<string | null>(null);
+  const pendingCheckpointAnswersRef = useRef<Record<string, string> | null>(
+    null
+  );
+
+  async function saveSession(
+    finalAnswers: Record<string, string>,
+    humanCheckpoint: boolean,
+    checkpointConfirmed: boolean
+  ) {
+    try {
+      const response = await fetch("/api/chat/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          decision_type: finalAnswers.decision_type,
+          priority: finalAnswers.priority,
+          situation: finalAnswers.timeline,
+          guardrail_category: firstGuardrailCategoryRef.current,
+          human_checkpoint: humanCheckpoint,
+          checkpoint_confirmed: checkpointConfirmed,
+        }),
+      });
+      if (!response.ok) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: nextId(),
+            role: "assistant",
+            kind: "error",
+            text: "Couldn't save this session — your results above are still shown, but weren't recorded.",
+          },
+        ]);
+      }
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: nextId(),
+          role: "assistant",
+          kind: "error",
+          text: "Couldn't save this session — your results above are still shown, but weren't recorded.",
+        },
+      ]);
+    }
+  }
+
+  function handleCheckpointChoice(messageId: string, confirmed: boolean) {
+    setMessages((prev) =>
+      prev.map((m) =>
+        m.id === messageId && m.kind === "checkpoint"
+          ? { ...m, status: confirmed ? "confirmed" : "declined" }
+          : m
+      )
+    );
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: nextId(),
+        role: "assistant",
+        kind: "text",
+        text: confirmed
+          ? "Good call — checking with an official source first is the safer move."
+          : "Okay — just remember to confirm this before you commit to anything.",
+      },
+    ]);
+
+    const finalAnswers = pendingCheckpointAnswersRef.current;
+    if (finalAnswers) {
+      saveSession(finalAnswers, true, confirmed);
+      pendingCheckpointAnswersRef.current = null;
+    }
+  }
+
   const isComplete = questionIndex >= INTAKE_QUESTIONS.length;
   const currentQuestion = isComplete ? null : INTAKE_QUESTIONS[questionIndex];
 
   function handleRestart() {
     idCounter.current = 1;
+    firstGuardrailCategoryRef.current = null;
+    pendingCheckpointAnswersRef.current = null;
     setMessages([
       { id: "msg-0", role: "assistant", kind: "text", text: GREETING },
       firstQuestionMessage("msg-1"),
@@ -100,6 +184,9 @@ export default function Chat() {
       const data = await response.json();
 
       if (data.status === "guardrail") {
+        if (!firstGuardrailCategoryRef.current) {
+          firstGuardrailCategoryRef.current = data.category;
+        }
         setMessages((prev) => [
           ...prev,
           {
@@ -138,6 +225,22 @@ export default function Chat() {
             },
           ]);
           setQuestionIndex(INTAKE_QUESTIONS.length);
+
+          if (data.response.needsHumanCheckpoint) {
+            pendingCheckpointAnswersRef.current = updatedAnswers;
+            setMessages((prev) => [
+              ...prev,
+              {
+                id: nextId(),
+                role: "assistant",
+                kind: "checkpoint",
+                text: data.response.checkpointText,
+                status: "pending",
+              },
+            ]);
+          } else {
+            saveSession(updatedAnswers, false, false);
+          }
         } else {
           const nextIndex = questionIndex + 1;
           const nextQuestion = INTAKE_QUESTIONS[nextIndex];
@@ -204,7 +307,57 @@ export default function Chat() {
                   key={message.id}
                   className="max-w-[85%] self-start rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-800"
                 >
-                  {message.message}
+                  <span className="mb-2 inline-flex items-center rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-amber-800">
+                    Guardrail
+                  </span>
+                  <p>{message.message}</p>
+                </div>
+              );
+            }
+
+            if (message.kind === "error") {
+              return (
+                <div
+                  key={message.id}
+                  className="max-w-[85%] self-start rounded-lg border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-700"
+                >
+                  {message.text}
+                </div>
+              );
+            }
+
+            if (message.kind === "checkpoint") {
+              return (
+                <div
+                  key={message.id}
+                  className="max-w-[90%] self-start rounded-xl border border-zinc-200 bg-white p-4 text-sm leading-6 text-zinc-700"
+                >
+                  <p className="font-medium text-zinc-900">Human checkpoint</p>
+                  <p className="mt-1">{message.text}</p>
+                  {message.status === "pending" ? (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleCheckpointChoice(message.id, true)}
+                        className="rounded-full bg-indigo-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-indigo-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                      >
+                        I&apos;ll check with an official source first
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleCheckpointChoice(message.id, false)}
+                        className="rounded-full border border-zinc-200 px-4 py-1.5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                      >
+                        Not now
+                      </button>
+                    </div>
+                  ) : (
+                    <p className="mt-3 text-xs font-medium text-zinc-500">
+                      {message.status === "confirmed"
+                        ? "You chose to check with an official source first."
+                        : "You chose not now."}
+                    </p>
+                  )}
                 </div>
               );
             }
