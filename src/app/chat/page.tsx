@@ -40,7 +40,18 @@ type Message =
       text: string;
       status: "pending" | "confirmed" | "declined";
     }
-  | { id: string; role: "assistant"; kind: "error"; text: string };
+  | { id: string; role: "assistant"; kind: "error"; text: string }
+  | {
+      id: string;
+      role: "assistant";
+      kind: "feedback";
+      sessionId: string;
+      comment: string;
+      status: "idle" | "submitting" | "submitted" | "error";
+      errorText?: string;
+    };
+
+const MAX_FEEDBACK_COMMENT_LENGTH = 200;
 
 function firstQuestionMessage(id: string): Message {
   const question = INTAKE_QUESTIONS[0];
@@ -102,7 +113,21 @@ export default function Chat() {
             text: "Couldn't save this session — your results above are still shown, but weren't recorded.",
           },
         ]);
+        return;
       }
+
+      const data = await response.json();
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: nextId(),
+          role: "assistant",
+          kind: "feedback",
+          sessionId: data.id,
+          comment: "",
+          status: "idle",
+        },
+      ]);
     } catch {
       setMessages((prev) => [
         ...prev,
@@ -140,6 +165,73 @@ export default function Chat() {
     if (finalAnswers) {
       saveSession(finalAnswers, true, confirmed);
       pendingCheckpointAnswersRef.current = null;
+    }
+  }
+
+  function handleFeedbackCommentChange(messageId: string, value: string) {
+    setMessages((prev) =>
+      prev.map((m) =>
+        m.id === messageId && m.kind === "feedback"
+          ? { ...m, comment: value.slice(0, MAX_FEEDBACK_COMMENT_LENGTH) }
+          : m
+      )
+    );
+  }
+
+  async function handleFeedbackRate(messageId: string, rating: "up" | "down") {
+    const message = messages.find((m) => m.id === messageId);
+    if (!message || message.kind !== "feedback") return;
+
+    setMessages((prev) =>
+      prev.map((m) =>
+        m.id === messageId && m.kind === "feedback" ? { ...m, status: "submitting" } : m
+      )
+    );
+
+    try {
+      const response = await fetch("/api/chat/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          session_id: message.sessionId,
+          rating,
+          comment: message.comment,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === messageId && m.kind === "feedback"
+              ? {
+                  ...m,
+                  status: "error",
+                  errorText: data?.error ?? "Couldn't save your feedback — please try again.",
+                }
+              : m
+          )
+        );
+        return;
+      }
+
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === messageId && m.kind === "feedback" ? { ...m, status: "submitted" } : m
+        )
+      );
+    } catch {
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === messageId && m.kind === "feedback"
+            ? {
+                ...m,
+                status: "error",
+                errorText: "Couldn't save your feedback — please try again.",
+              }
+            : m
+        )
+      );
     }
   }
 
@@ -357,6 +449,69 @@ export default function Chat() {
                         ? "You chose to check with an official source first."
                         : "You chose not now."}
                     </p>
+                  )}
+                </div>
+              );
+            }
+
+            if (message.kind === "feedback") {
+              const disabled = message.status !== "idle";
+              return (
+                <div
+                  key={message.id}
+                  className="max-w-[90%] self-start rounded-xl border border-zinc-200 bg-white p-4 text-sm leading-6 text-zinc-700"
+                >
+                  {message.status === "submitted" ? (
+                    <p className="font-medium text-zinc-900">
+                      Thanks for the feedback
+                    </p>
+                  ) : (
+                    <>
+                      <p className="font-medium text-zinc-900">
+                        Was this helpful?
+                      </p>
+                      <div className="mt-2 flex items-center gap-2">
+                        <button
+                          type="button"
+                          aria-label="Helpful"
+                          disabled={disabled}
+                          onClick={() => handleFeedbackRate(message.id, "up")}
+                          className="flex h-9 w-9 items-center justify-center rounded-full border border-zinc-200 text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                        >
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M18 15l-6-6-6 6"></path>
+                          </svg>
+                        </button>
+                        <button
+                          type="button"
+                          aria-label="Not helpful"
+                          disabled={disabled}
+                          onClick={() => handleFeedbackRate(message.id, "down")}
+                          className="flex h-9 w-9 items-center justify-center rounded-full border border-zinc-200 text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                        >
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M6 9l6 6 6-6"></path>
+                          </svg>
+                        </button>
+                        <input
+                          type="text"
+                          value={message.comment}
+                          onChange={(e) =>
+                            handleFeedbackCommentChange(message.id, e.target.value)
+                          }
+                          disabled={disabled}
+                          maxLength={MAX_FEEDBACK_COMMENT_LENGTH}
+                          placeholder="Optional comment"
+                          className="flex-1 rounded-full border border-zinc-200 px-3 py-1.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-indigo-500 focus:outline-none disabled:bg-zinc-50"
+                        />
+                      </div>
+                      <p className="mt-2 text-xs text-zinc-400">
+                        Max {MAX_FEEDBACK_COMMENT_LENGTH} characters. Don&apos;t include personal data.
+                      </p>
+                      {message.status === "error" && (
+                        <p className="mt-2 text-sm text-red-600">{message.errorText}</p>
+                      )}
+                    </>
                   )}
                 </div>
               );
