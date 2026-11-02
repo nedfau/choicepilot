@@ -28,6 +28,11 @@ const roadmap = [
     status: "shipped" as const,
   },
   {
+    label: "Week 5",
+    title: "Public Chatbot / Guided Assistant",
+    status: "shipped" as const,
+  },
+  {
     label: "Future",
     title: "Comparison & Scoring Engine",
     status: "upcoming" as const,
@@ -74,6 +79,12 @@ const featureCards = [
     title: "Marketing",
     description:
       "The brand system, persona, and content behind how ChoicePilot talks about itself — all drafted, nothing published.",
+  },
+  {
+    href: "/chat",
+    title: "Chat",
+    description:
+      "A guided, rule-based assistant that asks a few structured questions about your decision — simulated, not a live AI.",
   },
 ];
 
