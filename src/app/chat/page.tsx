@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { INTAKE_QUESTIONS, type ResponseLink } from "@/lib/chat-logic";
+import TestLog from "@/components/chat/TestLog";
 
 const GREETING =
   "Hi! I'm ChoicePilot's guided assistant. I'll ask a few quick questions to help structure your decision.";
@@ -609,6 +610,8 @@ export default function Chat() {
           Don&apos;t type personal data. Free text is not stored.
         </p>
       </div>
+
+      <TestLog />
     </div>
   );
 }
