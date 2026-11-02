@@ -179,11 +179,24 @@ const GUARDRAIL_KEYWORDS: Record<GuardrailCategory, string[]> = {
     "diagnose",
     "diagnosis",
     "medication",
+    "medications",
     "prescription",
     "medical condition",
     "illness",
     "disease",
     "surgery",
+    "headache",
+    "pain",
+    "sick",
+    "fever",
+    "dizzy",
+    "injury",
+    "medicine",
+    "pill",
+    "pills",
+    "antibiotic",
+    "antibiotics",
+    "treatment",
   ],
   financial_advice: [
     "invest",
@@ -216,6 +229,32 @@ const EMAIL_PATTERN = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/;
 const PHONE_PATTERN = /\b\d[\d\s-]{7,}\d\b/;
 const IBAN_PATTERN = /\b[A-Za-z]{2}\d{2}[A-Za-z0-9]{10,30}\b/;
 
+const MEDICAL_DISTRESS_KEYWORDS = [
+  "depressed",
+  "depression",
+  "hopeless",
+  "suicidal",
+  "suicide",
+  "kill myself",
+  "hurt myself",
+  "harm myself",
+  "self-harm",
+  "self harm",
+  "want to die",
+  "end my life",
+  "don't want to live",
+  "no reason to live",
+];
+
+const MEDICAL_DISTRESS_MESSAGE =
+  "I'm not able to help with that, but you deserve support. Please reach out to local emergency services, a crisis line, or your university's counseling service — right now, if you're able to.";
+
+/** Case-insensitive whole-word (or whole-phrase) match, so a keyword inside
+ * a longer word (e.g. "sick" inside "seasickness") doesn't trigger. */
+function matchesWholeWord(text: string, words: string[]): boolean {
+  return words.some((word) => new RegExp(`\\b${word}\\b`, "i").test(text));
+}
+
 /** Check free text for anything the assistant must not act on or store. */
 export function checkGuardrail(text: string): GuardrailResult | null {
   const normalized = text.toLowerCase();
@@ -237,7 +276,11 @@ export function checkGuardrail(text: string): GuardrailResult | null {
     return { category: "legal_visa", message: GUARDRAIL_MESSAGES.legal_visa };
   }
 
-  if (GUARDRAIL_KEYWORDS.medical.some((k) => normalized.includes(k))) {
+  if (matchesWholeWord(text, MEDICAL_DISTRESS_KEYWORDS)) {
+    return { category: "medical", message: MEDICAL_DISTRESS_MESSAGE };
+  }
+
+  if (matchesWholeWord(text, GUARDRAIL_KEYWORDS.medical)) {
     return { category: "medical", message: GUARDRAIL_MESSAGES.medical };
   }
 
