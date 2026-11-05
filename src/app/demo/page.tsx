@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import AgentMap from "@/components/demo/AgentMap";
 import ImpactCheck from "@/components/demo/ImpactCheck";
 import RoadmapV2 from "@/components/demo/RoadmapV2";
+import TestingSummary from "@/components/demo/TestingSummary";
 
 interface TableResult {
   count: number | null;
@@ -270,7 +271,12 @@ export default function Demo() {
         <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
           Testing summary
         </h2>
-        <p className="mt-3 text-sm text-zinc-400">Coming in a later step.</p>
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-600">
+          Aggregated results from everyone who&apos;s run through this demo.
+        </p>
+        <div className="mt-6">
+          <TestingSummary />
+        </div>
       </section>
 
       <section id="roadmap" className="mt-16 border-t border-zinc-100 pt-10">
