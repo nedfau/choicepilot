@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import AgentMap from "@/components/demo/AgentMap";
+import ImpactCheck from "@/components/demo/ImpactCheck";
+import RoadmapV2 from "@/components/demo/RoadmapV2";
 
 interface TableResult {
   count: number | null;
@@ -238,19 +241,29 @@ export default function Demo() {
         })}
       </div>
 
-      {/* Placeholders for later steps */}
       <section id="agent-map" className="mt-16 border-t border-zinc-100 pt-10">
         <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
           Agent map
         </h2>
-        <p className="mt-3 text-sm text-zinc-400">Coming in a later step.</p>
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-600">
+          Who — or what — is actually doing the work behind each module.
+        </p>
+        <div className="mt-6">
+          <AgentMap />
+        </div>
       </section>
 
       <section id="impact-check" className="mt-16 border-t border-zinc-100 pt-10">
         <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
           Impact check
         </h2>
-        <p className="mt-3 text-sm text-zinc-400">Coming in a later step.</p>
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-600">
+          Benefits and risks of the product as it exists today, and what&apos;s
+          mitigated versus still open.
+        </p>
+        <div className="mt-6">
+          <ImpactCheck />
+        </div>
       </section>
 
       <section id="testing-summary" className="mt-16 border-t border-zinc-100 pt-10">
@@ -262,9 +275,14 @@ export default function Demo() {
 
       <section id="roadmap" className="mt-16 border-t border-zinc-100 pt-10">
         <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
-          Roadmap
+          Version 2 roadmap
         </h2>
-        <p className="mt-3 text-sm text-zinc-400">Coming in a later step.</p>
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-600">
+          What&apos;s next, why it matters, and what&apos;s blocking it today.
+        </p>
+        <div className="mt-6">
+          <RoadmapV2 />
+        </div>
       </section>
     </div>
   );
