@@ -86,6 +86,19 @@ interface Stat {
   value: number | null;
 }
 
+interface SectionLink {
+  label: string;
+  href: string;
+}
+
+const SECTION_LINKS: SectionLink[] = [
+  { label: "Walkthrough", href: "#walkthrough" },
+  { label: "Agent map", href: "#agent-map" },
+  { label: "Impact", href: "#impact-check" },
+  { label: "Testing", href: "#testing-summary" },
+  { label: "Roadmap", href: "#roadmap" },
+];
+
 export default function Demo() {
   const [data, setData] = useState<DashboardResponse | null>(null);
   const [doneSteps, setDoneSteps] = useState<Record<number, boolean>>({});
@@ -134,27 +147,51 @@ export default function Demo() {
 
   return (
     <div className="mx-auto w-full min-w-0 max-w-5xl px-6 py-16">
-      <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">
+      {/* Hero */}
+      <h1 className="text-4xl font-semibold tracking-tight text-zinc-900 sm:text-5xl">
         Demo: ChoicePilot end to end
       </h1>
-      <p className="mt-3 text-lg leading-7 text-zinc-600">
+      <p className="mt-3 max-w-xl text-lg leading-7 text-zinc-600">
         A 5-minute guided walkthrough of every module.
       </p>
       <span className="mt-4 inline-flex items-center rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-amber-700">
         Simulated: all assistants on this site are rule-based, not live AI
       </span>
+      <div>
+        <a
+          href="#demo-step-1"
+          className="mt-6 inline-flex items-center justify-center rounded-full bg-indigo-600 px-6 py-3 text-base font-medium text-white transition-colors hover:bg-indigo-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+        >
+          Start the tour
+        </a>
+      </div>
+
+      {/* Section nav */}
+      <div className="sticky top-0 z-10 -mx-6 mt-10 border-b border-zinc-100 bg-white/95 px-6 py-3 backdrop-blur-sm">
+        <nav aria-label="Demo sections" className="flex w-full min-w-0 gap-2 overflow-x-auto">
+          {SECTION_LINKS.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="shrink-0 whitespace-nowrap rounded-full border border-zinc-200 px-3 py-1.5 text-sm font-medium text-zinc-600 transition-colors hover:border-indigo-500 hover:text-indigo-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+      </div>
 
       {/* Stat strip */}
-      <div className="mt-10 grid w-full min-w-0 grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+      <div className="mt-10 grid w-full min-w-0 grid-cols-3 gap-4 lg:grid-cols-6">
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="min-w-0 rounded-xl border border-zinc-200 p-4"
+            className="min-w-0 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
           >
             <p className="break-words text-xs font-semibold uppercase tracking-wide text-zinc-400">
               {stat.label}
             </p>
-            <p className="mt-1 text-2xl font-semibold tracking-tight text-zinc-900">
+            <p className="mt-1 text-2xl font-semibold tracking-tight text-indigo-600">
               {stat.value === null ? "—" : stat.value}
             </p>
           </div>
@@ -183,64 +220,113 @@ export default function Demo() {
       </div>
 
       {/* Walkthrough steps */}
-      <div className="mt-8 flex w-full min-w-0 flex-col gap-6">
-        {STEPS.map((step) => {
-          const isDone = Boolean(doneSteps[step.number]);
-          return (
-            <div
-              key={step.number}
-              id={`demo-step-${step.number}`}
-              className={`w-full min-w-0 rounded-xl border p-6 ${
-                isDone ? "border-emerald-200 bg-emerald-50" : "border-zinc-200"
-              }`}
-            >
-              <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
-                <div className="flex min-w-0 items-start gap-3">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-sm font-semibold text-indigo-600">
-                    {step.number}
+      <section id="walkthrough" className="mt-16 border-t border-zinc-100 pt-10">
+        <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
+          Walkthrough
+        </h2>
+        <div className="mt-8 flex w-full min-w-0 flex-col">
+          {STEPS.map((step, index) => {
+            const isDone = Boolean(doneSteps[step.number]);
+            const isLast = index === STEPS.length - 1;
+            return (
+              <div key={step.number} className="flex w-full min-w-0 gap-4 md:gap-6">
+                <div className="flex flex-col items-center">
+                  <span
+                    aria-hidden="true"
+                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
+                      isDone
+                        ? "bg-emerald-100 text-emerald-700"
+                        : "bg-indigo-50 text-indigo-600"
+                    }`}
+                  >
+                    {isDone ? "✓" : step.number}
                   </span>
-                  <div className="min-w-0">
-                    <p className="break-words text-base font-semibold text-zinc-900">
-                      {step.title}
-                    </p>
-                    <p className="mt-1 break-words text-sm leading-6 text-zinc-600">
-                      {step.task}
-                    </p>
-                    <p className="mt-2 break-words text-xs font-medium text-zinc-500">
-                      What to notice: {step.whatToNotice}
-                    </p>
-                  </div>
+                  {!isLast && (
+                    <div
+                      aria-hidden="true"
+                      className="mt-1 hidden w-px flex-1 bg-zinc-200 md:block"
+                    />
+                  )}
                 </div>
-                <button
-                  type="button"
-                  onClick={() => toggleDone(step.number)}
-                  aria-pressed={isDone}
-                  className={`shrink-0 rounded-full border px-4 py-1.5 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                <div
+                  id={`demo-step-${step.number}`}
+                  className={`mb-6 w-full min-w-0 rounded-xl border p-6 transition-shadow ${
                     isDone
-                      ? "border-emerald-300 bg-emerald-100 text-emerald-700"
-                      : "border-zinc-200 text-zinc-700 hover:bg-zinc-50"
+                      ? "border-emerald-200 bg-emerald-50"
+                      : "border-zinc-200 bg-white shadow-sm hover:shadow-md"
                   }`}
                 >
-                  {isDone ? "Done" : "Mark as done"}
-                </button>
+                  <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="break-words text-base font-semibold text-zinc-900">
+                        {step.title}
+                      </p>
+                      <p className="mt-1 break-words text-sm leading-6 text-zinc-600">
+                        {step.task}
+                      </p>
+                      <p className="mt-2 break-words text-xs font-medium text-zinc-500">
+                        What to notice: {step.whatToNotice}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => toggleDone(step.number)}
+                      aria-pressed={isDone}
+                      className={`shrink-0 rounded-full border px-4 py-1.5 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                        isDone
+                          ? "border-emerald-300 bg-emerald-100 text-emerald-700"
+                          : "border-zinc-200 text-zinc-700 hover:bg-zinc-50"
+                      }`}
+                    >
+                      {isDone ? "Done" : "Mark as done"}
+                    </button>
+                  </div>
+                  <div className="mt-4 flex flex-wrap gap-3">
+                    {step.links.map((link) => (
+                      <a
+                        key={link.href}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener"
+                        className="inline-flex items-center justify-center rounded-full bg-indigo-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-indigo-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                      >
+                        {link.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
               </div>
-              <div className="mt-4 flex flex-wrap gap-3">
-                {step.links.map((link) => (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener"
-                    className="inline-flex items-center justify-center rounded-full bg-indigo-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-indigo-500"
-                  >
-                    {link.label}
-                  </a>
-                ))}
+            );
+          })}
+        </div>
+
+        {doneCount === STEPS.length && (
+          <div className="mt-2 flex w-full min-w-0 flex-wrap items-center justify-between gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-5">
+            <div className="flex min-w-0 items-center gap-3">
+              <span
+                aria-hidden="true"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700"
+              >
+                ✓
+              </span>
+              <div className="min-w-0">
+                <p className="break-words text-sm font-semibold text-emerald-800">
+                  Tour complete
+                </p>
+                <p className="break-words text-sm text-emerald-700">
+                  You&apos;ve gone through every module.
+                </p>
               </div>
             </div>
-          );
-        })}
-      </div>
+            <a
+              href="#testing-summary"
+              className="shrink-0 whitespace-nowrap rounded-full border border-emerald-300 bg-white px-4 py-1.5 text-sm font-medium text-emerald-700 transition-colors hover:bg-emerald-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+            >
+              See the testing summary
+            </a>
+          </div>
+        )}
+      </section>
 
       <section id="agent-map" className="mt-16 border-t border-zinc-100 pt-10">
         <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
