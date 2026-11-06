@@ -19,7 +19,7 @@ export default function PromptLibraryEntry({
   note?: ReactNode;
 }) {
   return (
-    <div className="mt-8 w-full min-w-0 rounded-xl border border-zinc-200 p-6">
+    <div className="mt-8 w-full min-w-0 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
       <div className="flex min-w-0 flex-wrap items-center gap-3">
         <h3 className="min-w-0 break-words text-lg font-semibold text-zinc-900">{title}</h3>
         <span className="shrink-0 whitespace-nowrap rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-amber-700">

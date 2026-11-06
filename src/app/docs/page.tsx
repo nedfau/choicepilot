@@ -14,6 +14,17 @@ function Code({ children }: { children: string }) {
   );
 }
 
+interface SectionLink {
+  label: string;
+  href: string;
+}
+
+const DOCS_SECTION_LINKS: SectionLink[] = [
+  { label: "Prompt library", href: "#prompt-library" },
+  { label: "Build log", href: "#build-log" },
+  { label: "Coding-agent prompts", href: "#coding-agent-prompts" },
+];
+
 export default function Docs() {
   return (
     <div className="mx-auto w-full min-w-0 max-w-5xl px-6 py-24">
@@ -25,8 +36,23 @@ export default function Docs() {
         back as ChoicePilot moves beyond Week 0.
       </p>
 
+      {/* Section nav */}
+      <div className="sticky top-0 z-10 -mx-6 mt-10 border-b border-zinc-100 bg-white/95 px-6 py-3 backdrop-blur-sm">
+        <nav aria-label="Docs sections" className="flex w-full min-w-0 gap-2 overflow-x-auto">
+          {DOCS_SECTION_LINKS.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="shrink-0 whitespace-nowrap rounded-full border border-zinc-200 px-3 py-1.5 text-sm font-medium text-zinc-600 transition-colors hover:border-indigo-500 hover:text-indigo-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+      </div>
+
       {/* Prompt library */}
-      <section className="mt-16 border-t border-zinc-100 pt-10">
+      <section id="prompt-library" className="mt-16 border-t border-zinc-100 pt-10">
         <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">
           Prompt library
         </h2>
@@ -262,7 +288,7 @@ export default function Docs() {
       </section>
 
       {/* Build log */}
-      <section className="mt-16 border-t border-zinc-100 pt-10">
+      <section id="build-log" className="mt-16 border-t border-zinc-100 pt-10">
         <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">
           Build log
         </h2>
@@ -270,56 +296,76 @@ export default function Docs() {
           Every commit, grouped by week, generated from the real git history.
           Two entries are marked as an inferred grouping — they continued an
           existing week&apos;s module but weren&apos;t made under a prompt
-          that restated the week number.
+          that restated the week number. The newest week starts open.
         </p>
 
-        <div className="mt-6 flex w-full min-w-0 flex-col gap-4">
-          {BUILD_LOG.map((week) => (
-            <details key={week.week} className="w-full min-w-0 rounded-xl border border-zinc-200 p-6">
-              <summary className="cursor-pointer break-words text-base font-semibold text-zinc-900">
-                {week.week} — {week.title}{" "}
-                <span className="font-normal text-zinc-400">
-                  ({week.entries.length} commits)
-                </span>
-              </summary>
-              <div className="mt-4 w-full min-w-0 overflow-x-auto rounded-lg border border-zinc-100">
-                <table className="w-full min-w-[640px] text-left text-sm">
-                  <thead className="border-b border-zinc-100 bg-zinc-50 text-xs font-semibold uppercase tracking-wide text-zinc-500">
-                    <tr>
-                      <th className="px-4 py-2">Hash</th>
-                      <th className="px-4 py-2">Date</th>
-                      <th className="px-4 py-2">Message</th>
-                      <th className="px-4 py-2">Page</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-zinc-100">
-                    {week.entries.map((entry) => (
-                      <tr key={entry.hash}>
-                        <td className="px-4 py-2 font-mono text-xs text-zinc-500">
-                          {entry.hash}
-                        </td>
-                        <td className="px-4 py-2 text-zinc-600">{entry.date}</td>
-                        <td className="px-4 py-2 text-zinc-700">
-                          {entry.message}
-                          {entry.inferredWeek && (
-                            <span className="ml-2 inline-flex items-center rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700">
-                              Inferred week
-                            </span>
-                          )}
-                        </td>
-                        <td className="px-4 py-2 text-zinc-600">{entry.page ?? "—"}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+        <div className="mt-6 flex w-full min-w-0 flex-col">
+          {BUILD_LOG.map((week, index) => {
+            const isNewest = index === BUILD_LOG.length - 1;
+            return (
+              <div key={week.week} className="flex w-full min-w-0 gap-4 md:gap-6">
+                <div className="flex flex-col items-center">
+                  <span
+                    aria-hidden="true"
+                    className="mt-2 h-3 w-3 shrink-0 rounded-full bg-indigo-500"
+                  />
+                  {!isNewest && (
+                    <div
+                      aria-hidden="true"
+                      className="mt-1 hidden w-px flex-1 bg-zinc-200 md:block"
+                    />
+                  )}
+                </div>
+                <details
+                  open={isNewest}
+                  className="mb-6 w-full min-w-0 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+                >
+                  <summary className="cursor-pointer break-words text-base font-semibold text-zinc-900">
+                    {week.week} — {week.title}{" "}
+                    <span className="font-normal text-zinc-400">
+                      ({week.entries.length} commits)
+                    </span>
+                  </summary>
+                  <div className="mt-4 w-full min-w-0 overflow-x-auto rounded-lg border border-zinc-100">
+                    <table className="w-full min-w-[640px] text-left text-sm">
+                      <thead className="border-b border-zinc-100 bg-zinc-50 text-xs font-semibold uppercase tracking-wide text-zinc-500">
+                        <tr>
+                          <th className="px-4 py-2">Hash</th>
+                          <th className="px-4 py-2">Date</th>
+                          <th className="px-4 py-2">Message</th>
+                          <th className="px-4 py-2">Page</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-zinc-100">
+                        {week.entries.map((entry) => (
+                          <tr key={entry.hash}>
+                            <td className="px-4 py-2 font-mono text-xs text-zinc-500">
+                              {entry.hash}
+                            </td>
+                            <td className="px-4 py-2 text-zinc-600">{entry.date}</td>
+                            <td className="px-4 py-2 text-zinc-700">
+                              {entry.message}
+                              {entry.inferredWeek && (
+                                <span className="ml-2 inline-flex items-center rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700">
+                                  Inferred week
+                                </span>
+                              )}
+                            </td>
+                            <td className="px-4 py-2 text-zinc-600">{entry.page ?? "—"}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </details>
               </div>
-            </details>
-          ))}
+            );
+          })}
         </div>
       </section>
 
       {/* Coding-agent prompts */}
-      <section className="mt-16 border-t border-zinc-100 pt-10">
+      <section id="coding-agent-prompts" className="mt-16 border-t border-zinc-100 pt-10">
         <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">
           Coding-agent prompts
         </h2>
@@ -331,7 +377,10 @@ export default function Docs() {
 
         <div className="mt-6 grid w-full min-w-0 gap-6 sm:grid-cols-2">
           {BUILD_LOG.map((week) => (
-            <div key={week.week} className="min-w-0 rounded-xl border border-zinc-200 p-5">
+            <div
+              key={week.week}
+              className="min-w-0 rounded-xl border border-zinc-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+            >
               <p className="break-words text-sm font-semibold text-zinc-900">
                 {week.week} — {week.title}
               </p>

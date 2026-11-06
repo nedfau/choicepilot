@@ -88,6 +88,10 @@ export default function Dashboard() {
       <p className="mt-3 text-sm text-zinc-500">
         This data is public, structured only, and partly test data.
       </p>
+      <p className="mt-1 text-sm text-zinc-500">
+        How to read this: each card below links to its module, and shows the
+        module&apos;s five most recent saved records, newest first.
+      </p>
 
       {isLoading && <p className="mt-10 text-sm text-zinc-500">Loading…</p>}
       {loadError && (
@@ -98,7 +102,7 @@ export default function Dashboard() {
 
       {data && (
         <>
-          <div className="mt-10 grid w-full min-w-0 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid w-full min-w-0 grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-5">
             {MODULES.map((module) => {
               const result = data[module.tableKey];
               return (
@@ -106,7 +110,7 @@ export default function Dashboard() {
                   key={module.tableKey}
                   id={`dashboard-count-${module.tableKey}`}
                   href={module.href}
-                  className="min-w-0 rounded-xl border border-zinc-200 p-6 transition-colors hover:border-indigo-500 hover:bg-indigo-50"
+                  className="group min-w-0 rounded-xl border border-zinc-200 bg-white p-5 shadow-sm transition-shadow hover:border-indigo-500 hover:bg-indigo-50 hover:shadow-md"
                 >
                   <p className="break-words text-xs font-semibold uppercase tracking-wide text-zinc-400">
                     {module.title}
@@ -120,12 +124,15 @@ export default function Dashboard() {
                       {result?.count ?? 0}
                     </p>
                   )}
+                  <p className="mt-3 text-xs font-medium text-indigo-600 group-hover:text-indigo-700">
+                    Open →
+                  </p>
                 </Link>
               );
             })}
           </div>
 
-          <div className="mt-16 flex w-full min-w-0 flex-col gap-12">
+          <div className="mt-16 flex w-full min-w-0 flex-col gap-8">
             {MODULES.map((module) => {
               const result = data[module.tableKey];
               const columns =
@@ -137,9 +144,9 @@ export default function Dashboard() {
                 <section
                   key={module.tableKey}
                   id={`dashboard-table-${module.tableKey}`}
-                  className="w-full min-w-0"
+                  className="w-full min-w-0 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
                 >
-                  <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
+                  <h2 className="text-lg font-semibold tracking-tight text-zinc-900">
                     {module.title} — Latest records
                   </h2>
 
@@ -153,9 +160,9 @@ export default function Dashboard() {
                   ) : result && result.rows.length === 0 ? (
                     <p className="mt-4 text-sm text-zinc-500">No records yet.</p>
                   ) : result ? (
-                    <div className="mt-4 w-full min-w-0 overflow-x-auto rounded-xl border border-zinc-200">
-                      <table className="w-full min-w-[640px] text-left text-sm">
-                        <thead className="border-b border-zinc-200 bg-zinc-50 text-xs font-semibold uppercase tracking-wide text-zinc-500">
+                    <div className="mt-4 w-full min-w-0 max-h-80 overflow-auto rounded-lg border border-zinc-100">
+                      <table className="w-full min-w-[480px] text-left text-sm">
+                        <thead className="sticky top-0 border-b border-zinc-200 bg-zinc-50 text-xs font-semibold uppercase tracking-wide text-zinc-500">
                           <tr>
                             {columns.map((col) => (
                               <th key={col} className="px-4 py-3">
@@ -167,11 +174,19 @@ export default function Dashboard() {
                         <tbody className="divide-y divide-zinc-100">
                           {result.rows.map((row) => (
                             <tr key={String(row.id)}>
-                              {columns.map((col) => (
-                                <td key={col} className="px-4 py-3 text-zinc-600">
-                                  {formatCell(col, row[col])}
-                                </td>
-                              ))}
+                              {columns.map((col) => {
+                                const cellText = formatCell(col, row[col]);
+                                return (
+                                  <td key={col} className="px-4 py-3 text-zinc-600">
+                                    <span
+                                      className="block max-w-[200px] truncate"
+                                      title={cellText}
+                                    >
+                                      {cellText}
+                                    </span>
+                                  </td>
+                                );
+                              })}
                             </tr>
                           ))}
                         </tbody>
