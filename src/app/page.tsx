@@ -33,6 +33,11 @@ const roadmap = [
     status: "shipped" as const,
   },
   {
+    label: "Week 6",
+    title: "Integrated Agentic Venture + Impact & Viability",
+    status: "shipped" as const,
+  },
+  {
     label: "Future",
     title: "Comparison & Scoring Engine",
     status: "upcoming" as const,
@@ -86,6 +91,18 @@ const featureCards = [
     description:
       "A guided, rule-based assistant that asks a few structured questions about your decision — simulated, not a live AI.",
   },
+  {
+    href: "/demo",
+    title: "Demo",
+    description:
+      "A 5-minute guided walkthrough of every module, with live counts, an agent map, and an impact check.",
+  },
+  {
+    href: "/dashboard",
+    title: "Dashboard",
+    description:
+      "Everything ChoicePilot has saved so far, from every module — structured data only, never free text.",
+  },
 ];
 
 const trustPoints = [
@@ -119,6 +136,12 @@ export default function Home() {
             >
               {landingCopy.secondaryCta.label}
             </a>
+            <Link
+              href="/demo"
+              className="inline-flex items-center justify-center rounded-full border border-zinc-200 px-6 py-3 text-base font-medium text-zinc-700 transition-colors hover:bg-zinc-50"
+            >
+              Take the 5-minute demo
+            </Link>
           </div>
         </div>
       </section>
