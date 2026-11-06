@@ -129,7 +129,7 @@ export default function TestingSummary() {
   }
 
   return (
-    <div>
+    <div className="w-full min-w-0">
       {isLoading ? (
         <p className="text-sm text-zinc-500">Loading…</p>
       ) : summary?.error ? (
@@ -140,41 +140,41 @@ export default function TestingSummary() {
         <p className="text-sm text-zinc-500">No test results yet.</p>
       ) : summary ? (
         <>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-            <div className="rounded-xl border border-zinc-200 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-zinc-400">
+          <div className="grid w-full min-w-0 grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+            <div className="min-w-0 rounded-xl border border-zinc-200 p-4">
+              <p className="break-words text-xs font-semibold uppercase tracking-wide text-zinc-400">
                 Total testers
               </p>
               <p className="mt-1 text-2xl font-semibold tracking-tight text-zinc-900">
                 {summary.total}
               </p>
             </div>
-            <div className="rounded-xl border border-zinc-200 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-zinc-400">
+            <div className="min-w-0 rounded-xl border border-zinc-200 p-4">
+              <p className="break-words text-xs font-semibold uppercase tracking-wide text-zinc-400">
                 Completion rate
               </p>
               <p className="mt-1 text-2xl font-semibold tracking-tight text-zinc-900">
                 {formatPercent(summary.completionRate)}
               </p>
             </div>
-            <div className="rounded-xl border border-zinc-200 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-zinc-400">
+            <div className="min-w-0 rounded-xl border border-zinc-200 p-4">
+              <p className="break-words text-xs font-semibold uppercase tracking-wide text-zinc-400">
                 Average clarity
               </p>
               <p className="mt-1 text-2xl font-semibold tracking-tight text-zinc-900">
                 {formatAverage(summary.avgClarity)}
               </p>
             </div>
-            <div className="rounded-xl border border-zinc-200 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-zinc-400">
+            <div className="min-w-0 rounded-xl border border-zinc-200 p-4">
+              <p className="break-words text-xs font-semibold uppercase tracking-wide text-zinc-400">
                 Average value
               </p>
               <p className="mt-1 text-2xl font-semibold tracking-tight text-zinc-900">
                 {formatAverage(summary.avgValue)}
               </p>
             </div>
-            <div className="rounded-xl border border-zinc-200 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-zinc-400">
+            <div className="min-w-0 rounded-xl border border-zinc-200 p-4">
+              <p className="break-words text-xs font-semibold uppercase tracking-wide text-zinc-400">
                 Would use it
               </p>
               <p className="mt-1 text-2xl font-semibold tracking-tight text-zinc-900">
@@ -183,7 +183,7 @@ export default function TestingSummary() {
             </div>
           </div>
 
-          <div className="mt-6 overflow-x-auto rounded-xl border border-zinc-200">
+          <div className="mt-6 w-full min-w-0 overflow-x-auto rounded-xl border border-zinc-200">
             <table className="w-full min-w-[560px] text-left text-sm">
               <thead className="border-b border-zinc-200 bg-zinc-50 text-xs font-semibold uppercase tracking-wide text-zinc-500">
                 <tr>

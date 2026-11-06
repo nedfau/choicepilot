@@ -54,9 +54,42 @@ const ROWS: ImpactRow[] = [
 
 export default function ImpactCheck() {
   return (
-    <div>
-      <div className="overflow-x-auto rounded-xl border border-zinc-200">
-        <table className="w-full min-w-[720px] text-left text-sm">
+    <div className="w-full min-w-0">
+      {/* Below md: one stacked card per row, no fixed widths */}
+      <div className="flex w-full min-w-0 flex-col gap-4 md:hidden">
+        {ROWS.map((row) => (
+          <div
+            key={row.item}
+            className="w-full min-w-0 rounded-xl border border-zinc-200 p-4"
+          >
+            <p className="break-words font-medium text-zinc-900">{row.item}</p>
+            <dl className="mt-3 space-y-3 text-sm text-zinc-600">
+              <div>
+                <dt className="text-xs font-semibold uppercase tracking-wide text-zinc-400">
+                  Who is affected
+                </dt>
+                <dd className="mt-1 break-words">{row.whoIsAffected}</dd>
+              </div>
+              <div>
+                <dt className="text-xs font-semibold uppercase tracking-wide text-zinc-400">
+                  Mitigation in the product
+                </dt>
+                <dd className="mt-1 break-words">{row.mitigation}</dd>
+              </div>
+              <div>
+                <dt className="text-xs font-semibold uppercase tracking-wide text-zinc-400">
+                  Still open
+                </dt>
+                <dd className="mt-1 break-words">{row.stillOpen}</dd>
+              </div>
+            </dl>
+          </div>
+        ))}
+      </div>
+
+      {/* md and up: the full table, no fixed min width */}
+      <div className="hidden w-full min-w-0 overflow-x-auto rounded-xl border border-zinc-200 md:block">
+        <table className="w-full text-left text-sm">
           <thead className="border-b border-zinc-200 bg-zinc-50 text-xs font-semibold uppercase tracking-wide text-zinc-500">
             <tr>
               <th className="px-4 py-3">Benefit or risk</th>
@@ -68,17 +101,17 @@ export default function ImpactCheck() {
           <tbody className="divide-y divide-zinc-100">
             {ROWS.map((row) => (
               <tr key={row.item}>
-                <td className="px-4 py-3 font-medium text-zinc-900">{row.item}</td>
-                <td className="px-4 py-3 text-zinc-600">{row.whoIsAffected}</td>
-                <td className="px-4 py-3 text-zinc-600">{row.mitigation}</td>
-                <td className="px-4 py-3 text-zinc-600">{row.stillOpen}</td>
+                <td className="break-words px-4 py-3 font-medium text-zinc-900">{row.item}</td>
+                <td className="break-words px-4 py-3 text-zinc-600">{row.whoIsAffected}</td>
+                <td className="break-words px-4 py-3 text-zinc-600">{row.mitigation}</td>
+                <td className="break-words px-4 py-3 text-zinc-600">{row.stillOpen}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      <p className="mt-6 text-sm leading-6 text-zinc-600">
+      <p className="mt-6 break-words text-sm leading-6 text-zinc-600">
         <span className="font-semibold text-zinc-900">Viability: </span>
         the pricing tiers and revenue projections shown on{" "}
         <Link href="/pricing" className="font-medium text-indigo-600 hover:text-indigo-500">

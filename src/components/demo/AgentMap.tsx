@@ -67,15 +67,17 @@ const CHECKPOINT_NODE: AgentNode = {
 
 function NodeCard({ node }: { node: AgentNode }) {
   return (
-    <div className="rounded-xl border border-zinc-200 p-4">
-      <div className="flex items-start justify-between gap-2">
-        <p className="text-sm font-semibold text-zinc-900">{node.name}</p>
-        <span className="shrink-0 rounded-full bg-indigo-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-indigo-700">
+    <div className="w-full min-w-0 rounded-xl border border-zinc-200 p-4">
+      <div className="flex min-w-0 flex-wrap items-start justify-between gap-2">
+        <p className="min-w-0 break-words text-sm font-semibold text-zinc-900">
+          {node.name}
+        </p>
+        <span className="shrink-0 whitespace-nowrap rounded-full bg-indigo-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-indigo-700">
           {node.type}
         </span>
       </div>
-      <p className="mt-2 text-xs leading-5 text-zinc-600">{node.description}</p>
-      <p className="mt-2 text-xs leading-5 text-zinc-400">
+      <p className="mt-2 break-words text-xs leading-5 text-zinc-600">{node.description}</p>
+      <p className="mt-2 break-words text-xs leading-5 text-zinc-400">
         <span className="font-medium text-zinc-500">Overseen by:</span>{" "}
         {node.oversight}
       </p>
@@ -85,15 +87,15 @@ function NodeCard({ node }: { node: AgentNode }) {
 
 export default function AgentMap() {
   return (
-    <div className="flex flex-col items-center gap-3">
-      <div className="w-full max-w-xs">
+    <div className="flex w-full min-w-0 flex-col items-center gap-3">
+      <div className="w-full min-w-0 max-w-xs">
         <NodeCard node={BUILDER_NODE} />
       </div>
       <p aria-hidden="true" className="text-sm text-zinc-400">
         ↓ builds &amp; deploys
       </p>
 
-      <div className="grid w-full gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid w-full min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {MODULE_NODES.map((node) => (
           <NodeCard key={node.name} node={node} />
         ))}
@@ -103,7 +105,7 @@ export default function AgentMap() {
         ↓ triggered by Chat, for insurance or &quot;Meets all requirements&quot;
       </p>
 
-      <div className="w-full max-w-xs">
+      <div className="w-full min-w-0 max-w-xs">
         <NodeCard node={CHECKPOINT_NODE} />
       </div>
     </div>

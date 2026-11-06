@@ -16,7 +16,7 @@ function Code({ children }: { children: string }) {
 
 export default function Docs() {
   return (
-    <div className="mx-auto max-w-5xl px-6 py-24">
+    <div className="mx-auto w-full min-w-0 max-w-5xl px-6 py-24">
       <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">
         Docs
       </h1>
@@ -273,16 +273,16 @@ export default function Docs() {
           that restated the week number.
         </p>
 
-        <div className="mt-6 flex flex-col gap-4">
+        <div className="mt-6 flex w-full min-w-0 flex-col gap-4">
           {BUILD_LOG.map((week) => (
-            <details key={week.week} className="rounded-xl border border-zinc-200 p-6">
-              <summary className="cursor-pointer text-base font-semibold text-zinc-900">
+            <details key={week.week} className="w-full min-w-0 rounded-xl border border-zinc-200 p-6">
+              <summary className="cursor-pointer break-words text-base font-semibold text-zinc-900">
                 {week.week} — {week.title}{" "}
                 <span className="font-normal text-zinc-400">
                   ({week.entries.length} commits)
                 </span>
               </summary>
-              <div className="mt-4 overflow-x-auto rounded-lg border border-zinc-100">
+              <div className="mt-4 w-full min-w-0 overflow-x-auto rounded-lg border border-zinc-100">
                 <table className="w-full min-w-[640px] text-left text-sm">
                   <thead className="border-b border-zinc-100 bg-zinc-50 text-xs font-semibold uppercase tracking-wide text-zinc-500">
                     <tr>
@@ -329,15 +329,17 @@ export default function Docs() {
           themselves live in each week&apos;s evidence packet, not here.
         </p>
 
-        <div className="mt-6 grid gap-6 sm:grid-cols-2">
+        <div className="mt-6 grid w-full min-w-0 gap-6 sm:grid-cols-2">
           {BUILD_LOG.map((week) => (
-            <div key={week.week} className="rounded-xl border border-zinc-200 p-5">
-              <p className="text-sm font-semibold text-zinc-900">
+            <div key={week.week} className="min-w-0 rounded-xl border border-zinc-200 p-5">
+              <p className="break-words text-sm font-semibold text-zinc-900">
                 {week.week} — {week.title}
               </p>
               <ul className="mt-2 list-disc space-y-1 pl-4 text-sm leading-6 text-zinc-600">
                 {week.entries.map((entry) => (
-                  <li key={entry.hash}>{entry.message}</li>
+                  <li key={entry.hash} className="break-words">
+                    {entry.message}
+                  </li>
                 ))}
               </ul>
             </div>

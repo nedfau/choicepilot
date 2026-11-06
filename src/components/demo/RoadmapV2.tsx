@@ -40,12 +40,14 @@ const ROADMAP_ITEMS: RoadmapItem[] = [
 
 export default function RoadmapV2() {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid w-full min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {ROADMAP_ITEMS.map((item) => (
-        <div key={item.title} className="rounded-xl border border-zinc-200 p-5">
-          <p className="text-sm font-semibold text-zinc-900">{item.title}</p>
-          <p className="mt-2 text-xs leading-5 text-zinc-600">{item.reason}</p>
-          <p className="mt-3 text-xs font-medium text-zinc-500">Blocked by: {item.blocker}</p>
+        <div key={item.title} className="min-w-0 rounded-xl border border-zinc-200 p-5">
+          <p className="break-words text-sm font-semibold text-zinc-900">{item.title}</p>
+          <p className="mt-2 break-words text-xs leading-5 text-zinc-600">{item.reason}</p>
+          <p className="mt-3 break-words text-xs font-medium text-zinc-500">
+            Blocked by: {item.blocker}
+          </p>
         </div>
       ))}
     </div>

@@ -113,10 +113,10 @@ const trustPoints = [
 
 export default function Home() {
   return (
-    <div className="flex flex-col">
+    <div className="flex w-full min-w-0 flex-col">
       {/* Hero */}
-      <section className="border-b border-zinc-100">
-        <div className="mx-auto flex max-w-5xl flex-col items-start gap-6 px-6 py-24 sm:py-32">
+      <section className="w-full min-w-0 border-b border-zinc-100">
+        <div className="mx-auto flex w-full min-w-0 max-w-5xl flex-col items-start gap-6 px-6 py-24 sm:py-32">
           <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-zinc-900 sm:text-5xl">
             {landingCopy.heroHeadline}
           </h1>
@@ -167,16 +167,16 @@ export default function Home() {
           <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">
             How it works
           </h2>
-          <div className="mt-12 grid gap-10 sm:grid-cols-3">
+          <div className="mt-12 grid w-full min-w-0 gap-10 sm:grid-cols-3">
             {landingCopy.howItWorksSteps.map((step) => (
-              <div key={step.number} className="flex flex-col gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-50 text-sm font-semibold text-indigo-600">
+              <div key={step.number} className="flex min-w-0 flex-col gap-3">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-sm font-semibold text-indigo-600">
                   {step.number}
                 </span>
-                <h3 className="text-base font-semibold text-zinc-900">
+                <h3 className="break-words text-base font-semibold text-zinc-900">
                   {step.title}
                 </h3>
-                <p className="text-sm leading-6 text-zinc-600">
+                <p className="break-words text-sm leading-6 text-zinc-600">
                   {step.description}
                 </p>
               </div>
@@ -221,17 +221,17 @@ export default function Home() {
           <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">
             What&apos;s built so far
           </h2>
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid w-full min-w-0 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {featureCards.map((card) => (
               <Link
                 key={card.href}
                 href={card.href}
-                className="rounded-xl border border-zinc-200 p-6 transition-colors hover:border-indigo-500 hover:bg-indigo-50"
+                className="min-w-0 rounded-xl border border-zinc-200 p-6 transition-colors hover:border-indigo-500 hover:bg-indigo-50"
               >
-                <p className="text-base font-semibold text-zinc-900">
+                <p className="break-words text-base font-semibold text-zinc-900">
                   {card.title}
                 </p>
-                <p className="mt-2 text-sm leading-6 text-zinc-600">
+                <p className="mt-2 break-words text-sm leading-6 text-zinc-600">
                   {card.description}
                 </p>
               </Link>
@@ -287,18 +287,18 @@ export default function Home() {
           <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">
             Roadmap
           </h2>
-          <div className="mt-12 grid gap-6 sm:grid-cols-4">
+          <div className="mt-12 grid w-full min-w-0 gap-6 sm:grid-cols-4">
             {roadmap.map((item) => (
               <div
                 key={item.title}
-                className={`rounded-xl border px-5 py-6 ${
+                className={`min-w-0 rounded-xl border px-5 py-6 ${
                   item.status === "shipped"
                     ? "border-emerald-200 bg-emerald-50"
                     : "border-zinc-100 bg-white"
                 }`}
               >
                 <p
-                  className={`text-xs font-semibold uppercase tracking-wide ${
+                  className={`break-words text-xs font-semibold uppercase tracking-wide ${
                     item.status === "shipped"
                       ? "text-emerald-600"
                       : "text-zinc-400"
@@ -306,7 +306,7 @@ export default function Home() {
                 >
                   {item.label}
                 </p>
-                <p className="mt-2 text-sm font-medium text-zinc-900">
+                <p className="mt-2 break-words text-sm font-medium text-zinc-900">
                   {item.title}
                 </p>
               </div>

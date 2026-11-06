@@ -133,7 +133,7 @@ export default function Demo() {
   ];
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-16">
+    <div className="mx-auto w-full min-w-0 max-w-5xl px-6 py-16">
       <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">
         Demo: ChoicePilot end to end
       </h1>
@@ -145,13 +145,13 @@ export default function Demo() {
       </span>
 
       {/* Stat strip */}
-      <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+      <div className="mt-10 grid w-full min-w-0 grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="rounded-xl border border-zinc-200 p-4"
+            className="min-w-0 rounded-xl border border-zinc-200 p-4"
           >
-            <p className="text-xs font-semibold uppercase tracking-wide text-zinc-400">
+            <p className="break-words text-xs font-semibold uppercase tracking-wide text-zinc-400">
               {stat.label}
             </p>
             <p className="mt-1 text-2xl font-semibold tracking-tight text-zinc-900">
@@ -183,30 +183,30 @@ export default function Demo() {
       </div>
 
       {/* Walkthrough steps */}
-      <div className="mt-8 flex flex-col gap-6">
+      <div className="mt-8 flex w-full min-w-0 flex-col gap-6">
         {STEPS.map((step) => {
           const isDone = Boolean(doneSteps[step.number]);
           return (
             <div
               key={step.number}
               id={`demo-step-${step.number}`}
-              className={`rounded-xl border p-6 ${
+              className={`w-full min-w-0 rounded-xl border p-6 ${
                 isDone ? "border-emerald-200 bg-emerald-50" : "border-zinc-200"
               }`}
             >
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div className="flex items-start gap-3">
+              <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
+                <div className="flex min-w-0 items-start gap-3">
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-sm font-semibold text-indigo-600">
                     {step.number}
                   </span>
-                  <div>
-                    <p className="text-base font-semibold text-zinc-900">
+                  <div className="min-w-0">
+                    <p className="break-words text-base font-semibold text-zinc-900">
                       {step.title}
                     </p>
-                    <p className="mt-1 text-sm leading-6 text-zinc-600">
+                    <p className="mt-1 break-words text-sm leading-6 text-zinc-600">
                       {step.task}
                     </p>
-                    <p className="mt-2 text-xs font-medium text-zinc-500">
+                    <p className="mt-2 break-words text-xs font-medium text-zinc-500">
                       What to notice: {step.whatToNotice}
                     </p>
                   </div>
