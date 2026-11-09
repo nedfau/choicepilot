@@ -123,7 +123,7 @@ export default function Pricing() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-16">
+    <div className="mx-auto w-full min-w-0 max-w-5xl px-6 py-16">
       <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">
         Pricing simulator
       </h1>
@@ -136,7 +136,7 @@ export default function Pricing() {
         <ScenarioToggle preset={scenarioPreset} onSelect={handlePresetSelect} />
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+      <div className="mt-6 grid w-full min-w-0 gap-6 lg:grid-cols-2">
         <AssumptionsForm values={fields} onChange={handleChange} />
         <RevenueOutput
           revenue={revenue}

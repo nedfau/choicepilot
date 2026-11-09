@@ -48,7 +48,7 @@ export default function CampaignCalendar({
   }
 
   return (
-    <div id="marketing-calendar-card" className="rounded-xl border border-zinc-200 p-6">
+    <div id="marketing-calendar-card" className="w-full min-w-0 rounded-xl border border-zinc-200 p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm font-semibold text-zinc-900">
           14-day campaign calendar
@@ -78,7 +78,7 @@ export default function CampaignCalendar({
         </div>
       </div>
 
-      <div className="mt-4 overflow-x-auto rounded-xl border border-zinc-200">
+      <div className="mt-4 w-full min-w-0 overflow-x-auto rounded-xl border border-zinc-200">
         <table className="w-full min-w-[640px] text-left text-sm">
           <thead className="border-b border-zinc-200 bg-zinc-50 text-xs font-semibold uppercase tracking-wide text-zinc-500">
             <tr>

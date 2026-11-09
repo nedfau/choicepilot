@@ -119,7 +119,7 @@ export default function TestLog() {
   }
 
   return (
-    <details className="mt-12 rounded-xl border border-zinc-200 p-6">
+    <details className="mt-12 w-full min-w-0 rounded-xl border border-zinc-200 p-6">
       <summary className="cursor-pointer text-lg font-semibold text-zinc-900">
         For evaluators: external test log
       </summary>
@@ -129,7 +129,7 @@ export default function TestLog() {
           No names or personal data — use a label like &quot;Tester 1&quot;.
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-4 grid gap-4 sm:grid-cols-2">
+        <form onSubmit={handleSubmit} className="mt-4 grid w-full min-w-0 gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="tester-label" className="block text-sm font-medium text-zinc-700">
               Tester label
@@ -245,7 +245,7 @@ export default function TestLog() {
           </div>
         </form>
 
-        <div className="mt-8 overflow-x-auto rounded-xl border border-zinc-200">
+        <div className="mt-8 w-full min-w-0 overflow-x-auto rounded-xl border border-zinc-200">
           <table className="w-full min-w-[720px] text-left text-sm">
             <thead className="border-b border-zinc-200 bg-zinc-50 text-xs font-semibold uppercase tracking-wide text-zinc-500">
               <tr>

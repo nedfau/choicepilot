@@ -148,7 +148,7 @@ export default function Home() {
 
       {/* Problem */}
       <section className="border-b border-zinc-100">
-        <div className="mx-auto max-w-5xl px-6 py-20">
+        <div className="mx-auto w-full min-w-0 max-w-5xl px-6 py-20">
           <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">
             The first month abroad is three decisions, all at once.
           </h2>
@@ -163,7 +163,7 @@ export default function Home() {
 
       {/* How it works */}
       <section id="how-it-works" className="border-b border-zinc-100">
-        <div className="mx-auto max-w-5xl px-6 py-20">
+        <div className="mx-auto w-full min-w-0 max-w-5xl px-6 py-20">
           <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">
             How it works
           </h2>
@@ -187,7 +187,7 @@ export default function Home() {
 
       {/* Why non-affiliate */}
       <section className="border-b border-zinc-100">
-        <div className="mx-auto max-w-5xl px-6 py-20">
+        <div className="mx-auto w-full min-w-0 max-w-5xl px-6 py-20">
           <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">
             Why non-affiliate
           </h2>
@@ -217,7 +217,7 @@ export default function Home() {
 
       {/* Feature cards */}
       <section className="border-b border-zinc-100">
-        <div className="mx-auto max-w-5xl px-6 py-20">
+        <div className="mx-auto w-full min-w-0 max-w-5xl px-6 py-20">
           <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">
             What&apos;s built so far
           </h2>
@@ -242,7 +242,7 @@ export default function Home() {
 
       {/* Pricing teaser */}
       <section className="border-b border-zinc-100">
-        <div className="mx-auto max-w-5xl px-6 py-20">
+        <div className="mx-auto w-full min-w-0 max-w-5xl px-6 py-20">
           <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">
             Curious what it might cost?
           </h2>
@@ -262,7 +262,7 @@ export default function Home() {
 
       {/* FAQ */}
       <section className="border-b border-zinc-100">
-        <div className="mx-auto max-w-5xl px-6 py-20">
+        <div className="mx-auto w-full min-w-0 max-w-5xl px-6 py-20">
           <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">
             FAQ
           </h2>
@@ -283,7 +283,7 @@ export default function Home() {
 
       {/* Roadmap */}
       <section className="border-b border-zinc-100">
-        <div className="mx-auto max-w-5xl px-6 py-20">
+        <div className="mx-auto w-full min-w-0 max-w-5xl px-6 py-20">
           <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">
             Roadmap
           </h2>
@@ -317,7 +317,7 @@ export default function Home() {
 
       {/* Final CTA */}
       <section>
-        <div className="mx-auto max-w-5xl px-6 py-20 text-center">
+        <div className="mx-auto w-full min-w-0 max-w-5xl px-6 py-20 text-center">
           <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">
             {landingCopy.finalCta.heading}
           </h2>

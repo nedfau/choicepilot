@@ -41,14 +41,14 @@ const LEVEL_STYLES: Record<RiskLevel, string> = {
 
 export default function RiskMap() {
   return (
-    <div className="grid gap-6 sm:grid-cols-2">
+    <div className="grid w-full min-w-0 gap-6 sm:grid-cols-2">
       {RISKS.map((risk) => (
         <div
           key={risk.name}
-          className="rounded-xl border border-zinc-200 p-6"
+          className="min-w-0 rounded-xl border border-zinc-200 p-6"
         >
-          <div className="flex items-start justify-between gap-3">
-            <h3 className="text-base font-semibold text-zinc-900">
+          <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
+            <h3 className="min-w-0 break-words text-base font-semibold text-zinc-900">
               {risk.name}
             </h3>
             <span

@@ -137,7 +137,7 @@ export default function Core() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16">
+    <div className="mx-auto w-full min-w-0 max-w-3xl px-6 py-16">
       <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">
         Extract the core of your decision
       </h1>
@@ -271,12 +271,12 @@ export default function Core() {
             {recentEntries.map((entry) => (
               <li
                 key={entry.id}
-                className="flex items-center justify-between rounded-lg border border-zinc-100 px-4 py-3"
+                className="flex min-w-0 flex-wrap items-center justify-between gap-2 rounded-lg border border-zinc-100 px-4 py-3"
               >
-                <span className="text-sm text-zinc-800">
+                <span className="min-w-0 break-words text-sm text-zinc-800">
                   {titleFromText(entry.input_text)}
                 </span>
-                <span className="text-xs text-zinc-400">
+                <span className="shrink-0 whitespace-nowrap text-xs text-zinc-400">
                   {relativeTime(entry.created_at)}
                 </span>
               </li>

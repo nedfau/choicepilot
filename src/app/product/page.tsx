@@ -128,7 +128,7 @@ function FeatureCell({ value }: { value: Cell }) {
 
 export default function Product() {
   return (
-    <div className="mx-auto max-w-5xl px-6 py-16">
+    <div className="mx-auto w-full min-w-0 max-w-5xl px-6 py-16">
       <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">
         Product
       </h1>
@@ -141,13 +141,13 @@ export default function Product() {
         <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
           Customer segments
         </h2>
-        <div className="mt-6 grid gap-6 sm:grid-cols-2">
+        <div className="mt-6 grid w-full min-w-0 gap-6 sm:grid-cols-2">
           {SEGMENTS.map((segment) => (
             <div
               key={segment.name}
-              className="rounded-xl border border-zinc-200 p-6"
+              className="min-w-0 rounded-xl border border-zinc-200 p-6"
             >
-              <h3 className="text-base font-semibold text-zinc-900">
+              <h3 className="break-words text-base font-semibold text-zinc-900">
                 {segment.name}
               </h3>
               <p className="mt-3 text-sm leading-6 text-zinc-600">
@@ -181,7 +181,7 @@ export default function Product() {
         </div>
       </div>
 
-      <div className="mt-16 overflow-x-auto rounded-xl border border-zinc-200">
+      <div className="mt-16 w-full min-w-0 overflow-x-auto rounded-xl border border-zinc-200">
         <table className="w-full min-w-[720px] text-left text-sm">
           <thead className="border-b border-zinc-200 bg-zinc-50">
             <tr>
@@ -239,7 +239,7 @@ export default function Product() {
           A closer look at what each tier includes, feature by feature.
         </p>
 
-        <div className="mt-6 overflow-x-auto rounded-xl border border-zinc-200">
+        <div className="mt-6 w-full min-w-0 overflow-x-auto rounded-xl border border-zinc-200">
           <table className="w-full min-w-[720px] text-left text-sm">
             <thead className="border-b border-zinc-200 bg-zinc-50">
               <tr>

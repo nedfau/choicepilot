@@ -38,7 +38,7 @@ export default function RevenueOutput({
       : segmentRevenue.universities.annual;
 
   return (
-    <div className="rounded-xl border border-zinc-200 p-6">
+    <div className="w-full min-w-0 rounded-xl border border-zinc-200 p-6">
       <div className="inline-flex rounded-full border border-zinc-200 p-1 text-sm">
         {(["monthly", "annual"] as const).map((period) => (
           <button

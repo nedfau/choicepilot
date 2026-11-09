@@ -31,7 +31,7 @@ export default function AssumptionsForm({
   onChange: (field: keyof AssumptionsFields, value: string) => void;
 }) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-zinc-200">
+    <div className="w-full min-w-0 overflow-x-auto rounded-xl border border-zinc-200">
       <table className="w-full min-w-[480px] text-left text-sm">
         <thead className="border-b border-zinc-200 bg-zinc-50 text-xs font-semibold uppercase tracking-wide text-zinc-500">
           <tr>

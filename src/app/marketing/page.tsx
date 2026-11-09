@@ -27,7 +27,7 @@ export default function Marketing() {
   const handleSaved = () => setRefreshKey((key) => key + 1);
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-16">
+    <div className="mx-auto w-full min-w-0 max-w-5xl px-6 py-16">
       <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">
         Marketing
       </h1>
@@ -290,7 +290,7 @@ export default function Marketing() {
         <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
           Social posts
         </h2>
-        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-6 grid w-full min-w-0 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {socialPosts.map((post) => (
             <SocialPostCard key={post.id} post={post} onSaved={handleSaved} />
           ))}
@@ -302,7 +302,7 @@ export default function Marketing() {
         <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
           Video scripts
         </h2>
-        <div className="mt-6 grid gap-6 lg:grid-cols-3">
+        <div className="mt-6 grid w-full min-w-0 gap-6 lg:grid-cols-3">
           {videoScripts.map((script) => (
             <VideoScriptCard
               key={script.id}
@@ -328,7 +328,7 @@ export default function Marketing() {
         <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
           A/B tests
         </h2>
-        <div className="mt-6 grid gap-6 sm:grid-cols-2">
+        <div className="mt-6 grid w-full min-w-0 gap-6 sm:grid-cols-2">
           {abTests.map((test) => (
             <AbTestCard key={test.testName} test={test} />
           ))}

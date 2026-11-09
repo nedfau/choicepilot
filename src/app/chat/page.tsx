@@ -367,7 +367,7 @@ export default function Chat() {
     latestMessage.role === "assistant";
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16">
+    <div className="mx-auto w-full min-w-0 max-w-3xl px-6 py-16">
       <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">
         Chat
       </h1>
@@ -388,7 +388,7 @@ export default function Chat() {
         </button>
       </div>
 
-      <div className="mt-8 rounded-xl border border-zinc-200 p-6">
+      <div className="mt-8 w-full min-w-0 rounded-xl border border-zinc-200 p-6">
         <div
           aria-live="polite"
           className="flex flex-col gap-3"

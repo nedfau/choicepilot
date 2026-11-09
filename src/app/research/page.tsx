@@ -57,7 +57,7 @@ export default function Research() {
   );
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-16">
+    <div className="mx-auto w-full min-w-0 max-w-5xl px-6 py-16">
       <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">
         Research &amp; benchmarking
       </h1>

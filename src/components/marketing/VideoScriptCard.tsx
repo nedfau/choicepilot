@@ -11,15 +11,15 @@ export default function VideoScriptCard({
   onSaved?: () => void;
 }) {
   return (
-    <div id={script.id} className="rounded-xl border border-zinc-200 p-6">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="text-sm font-semibold text-zinc-900">
+    <div id={script.id} className="min-w-0 rounded-xl border border-zinc-200 p-6">
+      <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="break-words text-sm font-semibold text-zinc-900">
             {script.title}
           </p>
           <p className="text-xs text-zinc-400">{script.duration}</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <CopyButton text={formatVideoScript(script)} />
           <SaveButton
             assetType="video_script"

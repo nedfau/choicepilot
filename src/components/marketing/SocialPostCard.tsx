@@ -11,12 +11,12 @@ export default function SocialPostCard({
   onSaved?: () => void;
 }) {
   return (
-    <div id={post.id} className="rounded-xl border border-zinc-200 p-6">
-      <div className="flex items-start justify-between gap-3">
-        <span className="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-indigo-700">
+    <div id={post.id} className="min-w-0 rounded-xl border border-zinc-200 p-6">
+      <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
+        <span className="shrink-0 whitespace-nowrap rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-indigo-700">
           {post.platform}
         </span>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <CopyButton text={formatSocialPost(post)} />
           <SaveButton
             assetType="social_post"
